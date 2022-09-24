@@ -44,16 +44,10 @@ Route::group([
     Route::post('/role-delete/{id}', [RoleController::class, 'destroy']);
 
 
-    Route::resource('roles', RoleController::class);
+   // Route::resource('roles', RoleController::class);
     //Route::resource('users', UserController::class);
 
     
     // Route::get('/user-profile', [UserController::class, 'userProfile']);    
 });
 
-
-// Route::group(['middleware' => ['auth']], function() {
-//     Route::resource('roles', RoleController::class);
-//     Route::resource('users', UserController::class);
-//     Route::resource('products', ProductController::class);
-// }

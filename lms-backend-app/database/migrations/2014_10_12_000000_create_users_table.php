@@ -14,15 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            //$table->id();
+            //$table->uuid('id')->primary();
+            $table->id();
             $table->string('cid');
             $table->string('name');
             $table->string('gender');
             $table->integer('contactNo');
-            // $table->integer('roleId')
-            // ->references('id')
-            // ->on('roles');
             $table->string('imageUrl')->default('../image/logo.png');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

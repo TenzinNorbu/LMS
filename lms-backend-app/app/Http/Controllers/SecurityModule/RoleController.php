@@ -10,20 +10,21 @@ use DB;
 
 class RoleController extends Controller
 {
-    // function __construct()
-    // {
-        function __construct()
-        {
-            //  $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
+    public function __construct() {
+         $this->middleware('auth:api', ['except' => ['role']]);
+        // $this->middleware('auth:api');
+     }
+        // function __construct()
+        // {
+        //     //  $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
             //  $this->middleware('permission:role-create', ['only' => ['create','store']]);
             //  $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
             //  $this->middleware('permission:role-delete', ['only' => ['destroy']]);
 
-             $this->middleware('auth:api', ['except' => ['role']]);
-
+            //
    //     };
     
-    }
+  //  }
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +32,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::orderBy('id','DESC')->paginate(5);
+        //$roles = Role::orderBy('id','DESC')->paginate(5);
+        $roles = Role::all();
         return response()->json([
             'status' => 'success',
             'message'=>'Role details',
@@ -88,6 +90,7 @@ class RoleController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Role-permission details',
+                'role' => $role,
                 'rolepermission' => $rolePermissions,
             ]);
     }

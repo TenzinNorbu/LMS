@@ -9,34 +9,20 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use DB;
-use Illuminate\Support\Arr;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+//use Illuminate\Support\Arr;
+//use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use Auth;
 
 class UserController extends Controller
 {
     public function __construct() {
-       // $this->middleware('auth:api', ['except' => ['user']]);
+        $this->middleware('auth:api', ['except' => ['user']]);
         //$this->middleware('auth:api');
     }
 
     public function index()
     {
        $users = User::all();
-    //    try {
-    //     if ($token = Auth::attempt($users->token())) {
-    //         // return response()->json([
-    //         //    'status' => 'success',
-    //         //     'message' => 'Invalid Credentials'
-    //         //     'user' => $users,
-    //         // ]);
-    //     }
-    // } catch (JWTException $e) {
-    //     return response()->json([
-    //         'status' => 'error',
-    //         'message' => 'User is aunthorized',
-    //     ], 500);
-    // }
         return response()->json([
             'status' => 'success',
             'user' => $users,
@@ -54,13 +40,13 @@ class UserController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
         ]);
+        
         if(!($validator->fails())) {
             $user = new User;
             $user->cid = $request->cid;
             $user->name = $request->name;
             $user->gender = $request->gender;
             $user->contactNo = $request->contactNo;
-            // $register->roleId = $request->roleId;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->assignRole($request->input('roles'));
@@ -110,10 +96,10 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->gender = $request->gender;
         $user->contactNo = $request->contactNo;
+        //$user->save();
 
         DB::table('model_has_roles')->where('model_id',$id)->delete();
         $user->assignRole($request->input('roles'));
-
         $user->save();
 
         return response()->json([

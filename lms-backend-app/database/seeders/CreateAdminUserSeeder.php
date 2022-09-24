@@ -24,12 +24,14 @@ class CreateAdminUserSeeder extends Seeder
             'name' => 'tenzin', 
             'gender'=> 'M',
             'contactNo'=>'17439160',
-            'email' => 'admin2@gmail.com',
-            'password' => bcrypt('123456')
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('tenzin')
         ]);
       
-        $role = Role::create(['name' => 'User']);
-       
+        $role = Role::create(['name' => 'Super Admin']);
+        // $role = Role::create(['name' => 'PmU']);
+        // $role = Role::create(['name' => 'User']);
+
         $permissions = Permission::pluck('id','id')->all();
      
         $role->syncPermissions($permissions);

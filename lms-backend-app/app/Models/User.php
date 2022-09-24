@@ -8,14 +8,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
-use App\Traits\UUID;
+//use App\Traits\UUID;
 use Spatie\Permission\Traits\HasRoles;
 
 
 
 class User extends Authenticatable implements JWTSubject
 {
-    use UUID, HasApiTokens, HasFactory, Notifiable, HasRoles;
+    //use UUID, HasApiTokens, HasFactory, Notifiable, HasRoles;
+     use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
 
     /**
      * The attributes that are mass assignable.
