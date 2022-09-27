@@ -6,7 +6,7 @@ use App\Http\Controllers\SecurityModule\LoginController;
 use App\Http\Controllers\SecurityModule\RoleController;
 use App\Http\Controllers\SecurityModule\UserController;
 use App\Http\Controllers\SecurityModule\ProfileController;
-use App\Http\Controllers\BranchExtentionController;
+use App\Http\Controllers\MasterData\BranchExtentionController;
 
 
 
