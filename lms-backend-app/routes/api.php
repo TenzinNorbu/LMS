@@ -6,7 +6,11 @@ use App\Http\Controllers\SecurityModule\LoginController;
 use App\Http\Controllers\SecurityModule\RoleController;
 use App\Http\Controllers\SecurityModule\UserController;
 use App\Http\Controllers\SecurityModule\ProfileController;
-use App\Http\Controllers\MasterData\BranchExtentionController;
+use App\Http\Controllers\MasterData\BranchController;
+use App\Http\Controllers\MasterData\DepartmentController;
+use App\Http\Controllers\ApplicantModule\ApplicantInfoController;
+use App\Http\Controllers\ApplicantModule\LoanDetailController;
+
 
 
 
@@ -31,7 +35,7 @@ Route::group([
 ], function ($router) {
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout']);
-    Route::post('/refresh', [LoginController::class, 'refresh']);
+    Route::post('/refresh-token', [LoginController::class, 'refreshToken']);
     Route::post('/user-create', [UserController::class, 'store']);
     Route::get('/user-lists', [UserController::class, 'index']);
     Route::get('/user-show/{id}', [UserController::class, 'show']);
@@ -47,13 +51,24 @@ Route::group([
 
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'branch-extention'
+    'prefix' => 'branch'
 ], function ($router) {
-    Route::post('/create', [BranchExtentionController::class, 'store']);
-    Route::get('/lists', [BranchExtentionController::class, 'index']);
-    Route::get('/show/{id}', [BranchExtentionController::class, 'show']);
-    Route::post('/update/{id}', [BranchExtentionController::class, 'update']);
-    Route::post('/delete/{id}', [BranchExtentionController::class, 'destroy']);
+    Route::post('/create', [BranchController::class, 'store']);
+    Route::get('/lists', [BranchController::class, 'index']);
+    Route::get('/show/{id}', [BranchController::class, 'show']);
+    Route::post('/update/{id}', [BranchController::class, 'update']);
+    Route::post('/delete/{id}', [BranchController::class, 'destroy']);
+
+});
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'department'
+], function ($router) {
+    Route::post('/create', [DepartmentController::class, 'store']);
+    Route::get('/lists', [DepartmentController::class, 'index']);
+    Route::get('/show/{id}', [DepartmentController::class, 'show']);
+    Route::post('/update/{id}', [DepartmentController::class, 'update']);
+    Route::post('/delete/{id}', [DepartmentController::class, 'destroy']);
 
 });
 Route::group([
@@ -62,4 +77,28 @@ Route::group([
 ], function ($router) {
     Route::post('/update/{id}', [ProfileController::class, 'profile']);
    
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'applicant'
+], function ($router) {
+    Route::post('/create', [ApplicantInfoController::class, 'store']);
+    Route::get('/lists', [ApplicantInfoController::class, 'index']);
+    Route::get('/show/{id}', [ApplicantInfoController::class, 'show']);
+    Route::post('/update/{id}', [ApplicantInfoController::class, 'update']);
+    Route::post('/delete/{id}', [ApplicantInfoController::class, 'destroy']);
+
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'loan'
+], function ($router) {
+    Route::post('/apply', [LoanDetailController::class, 'store']);
+    Route::get('/lists', [ApplicantInfoController::class, 'index']);
+    Route::get('/show/{id}', [ApplicantInfoController::class, 'show']);
+    Route::post('/update/{id}', [ApplicantInfoController::class, 'update']);
+    Route::post('/delete/{id}', [ApplicantInfoController::class, 'destroy']);
+
 });

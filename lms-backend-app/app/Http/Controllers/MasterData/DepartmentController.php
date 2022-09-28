@@ -5,15 +5,13 @@ namespace App\Http\Controllers\MasterData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\BranchExtention;
+use App\Models\Department;
 
-
-class BranchExtentionController extends Controller
+class DepartmentController extends Controller
 {
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['branch_extention']]);
+        $this->middleware('auth:api', ['except' => ['department']]);
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -21,10 +19,10 @@ class BranchExtentionController extends Controller
      */
     public function index()
     {
-        $branch_extention=BranchExtention::all();
+        $department=Department::all();
         return response()->json([
             'status' => 'success',
-            'branch_extension' => $branch_extention
+            'department' => $department
         ]);
     }
 
@@ -35,7 +33,7 @@ class BranchExtentionController extends Controller
      */
     public function create()
     {
-        //
+       //
     }
 
     /**
@@ -51,14 +49,14 @@ class BranchExtentionController extends Controller
         ]);
         
         if(!($validator->fails())) {
-            $branch_extention = new BranchExtention;
-            $branch_extention->name = $request->name;
-            $branch_extention->save();
+            $department = new Department;
+            $department->name = $request->name;
+            $department->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Branch Extention successfully Registered',
-            'branch_extention' => $branch_extention,
+            'message' => 'Department added successfully',
+            'deaprtment' => $department,
             ]);
         }
     }
@@ -71,10 +69,10 @@ class BranchExtentionController extends Controller
      */
     public function show($id)
     {
-        $branch_extention= BranchExtention::find($id);
+        $department= Department::find($id);
         return response()->json([
             'status'=> 'success',
-            'branch_extention'=>$branch_extention
+            'department'=>$department
         ]);
     }
 
@@ -102,14 +100,14 @@ class BranchExtentionController extends Controller
             'name' => 'required|string|between:2,100',
         ]);
 
-        $branch_extention = BranchExtention::find($id);
-        $branch_extention->name = $request->name;
-        $branch_extention->save();
+        $department = Department::find($id);
+        $department->name = $request->name;
+        $department->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Branch Extention Updated successfully',
-            'branch_extention' => $branch_extention
+            'message' => 'Department Updated successfully',
+            'department' => $department
         ]);
 
     }
@@ -122,12 +120,12 @@ class BranchExtentionController extends Controller
      */
     public function destroy($id)
     {
-        $branch_extention = BranchExtention::find($id);
-        $branch_extention->delete();
+        $department = Department::find($id);
+        $department->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Branch Extension deleted successfully',
-            'branch_extention' => $branch_extention,
+            'message' => 'Department deleted successfully',
+            'department' => $department,
         ]);
     }
 }

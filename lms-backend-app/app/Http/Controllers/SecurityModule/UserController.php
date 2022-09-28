@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Branch;
+use App\Models\Department;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use DB;
@@ -32,9 +34,12 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
-            'cid' => 'required|string|min:11|max:11',
+            'cid_no' => 'required|string|min:11|max:11',
             'gender' => 'required|string',
-            'contactNo' => 'required|integer',
+            'emp_id' => 'required|string',
+            'branch_id' => 'required|integer',
+            'department_id' => 'required|integer',
+            'contact_no' => 'required|integer',
             'roles' => 'required|string',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
@@ -42,10 +47,13 @@ class UserController extends Controller
         
         if(!($validator->fails())) {
             $user = new User;
-            $user->cid = $request->cid;
+            $user->cid_no = $request->cid_no;
             $user->name = $request->name;
+            $user->emp_id = $request->emp_id;
             $user->gender = $request->gender;
-            $user->contactNo = $request->contactNo;
+            $user->branch_id = $request->branch_id;
+            $user->department_id = $request->department_id;
+            $user->contact_no = $request->contact_no;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->assignRole($request->input('roles'));
@@ -84,17 +92,23 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
-            'cid' => 'required|string|min:11|max:11',
+            'cid_no' => 'required|string|min:11|max:11',
+            'emp_id' => 'required|string',
             'gender' => 'required|string',
-            'contactNo' => 'required|integer',
+            'branch_id' => 'required|string',
+            'department_id' => 'required|string',
+            'contact_no' => 'required|integer',
             'roles' => 'required|string',
         ]);
 
         $user = User::find($id);
-        $user->cid = $request->cid;
+        $user->cid_no = $request->cid_no;
         $user->name = $request->name;
         $user->gender = $request->gender;
-        $user->contactNo = $request->contactNo;
+        $user->emp_id = $request->emp_id;
+        $user->contact_no = $request->contact_no;
+        $user->branch_id = $request->branch_id;
+        $user->department_id = $request->department_id;
         //$user->save();
 
         DB::table('model_has_roles')->where('model_id',$id)->delete();

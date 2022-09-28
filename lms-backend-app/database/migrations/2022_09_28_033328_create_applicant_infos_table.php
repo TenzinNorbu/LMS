@@ -13,9 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('branch_extentions', function (Blueprint $table) {
+        Schema::create('applicant_infos', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('cid_no');
             $table->string('name');
+            $table->string('gender');
+            $table->integer('dzongkhag_id');
+            $table->integer('gewog_id');
+            $table->integer('village_id');
+            $table->integer('contact_no');
             $table->timestamps();
         });
     }
@@ -27,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('branch_extentions');
+        Schema::dropIfExists('applicant_infos');
     }
 };

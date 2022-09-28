@@ -15,8 +15,8 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
 {
-    //use UUID, HasApiTokens, HasFactory, Notifiable, HasRoles;
-     use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    // use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
 
     /**
@@ -26,10 +26,13 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
-        'cid',
+        'cid_no',
         'gender',
-        'contactNo',
-        'imageUrl',
+        'emp_id',
+        'branch_id',
+        'department_id',
+        'contact_no',
+        'profile_url',
         'email',
         'password',
     ];

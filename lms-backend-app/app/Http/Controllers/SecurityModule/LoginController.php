@@ -49,7 +49,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function refresh()
+    public function refreshToken()
     {
         return $this->createToken(auth()->refresh());
     }

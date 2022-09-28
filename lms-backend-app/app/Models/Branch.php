@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\UUID;
 
 
-class BranchExtention extends Model
+class Branch extends Model
 {
-    use UUID,HasFactory;
+    use HasFactory;
     protected $fillable = ['id','name'];
 
 }
