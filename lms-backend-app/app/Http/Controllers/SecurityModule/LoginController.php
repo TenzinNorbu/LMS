@@ -10,6 +10,7 @@ use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 
 
+
 class LoginController extends Controller
 {
      public function __construct()
@@ -23,12 +24,12 @@ class LoginController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-        $credentials = $request->only('email', 'password');
-            try {
-                if (!$token = JWTAuth::attempt($credentials)) {
+        $user = $request->only('email', 'password');
+            try{
+                if (!$token = JWTAuth::attempt($user)) {
                     return response()->json([
                        'status' => 'error',
-                        'message' => 'Invalid Credentials'
+                        'message' => 'Invalid Credentials or User not found'
                     ], 401);
                 }
             } catch (JWTException $e) {

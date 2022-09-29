@@ -21,11 +21,9 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $branch=Branch::all();
-        return response()->json([
-            'status' => 'success',
-            'branch_office' => $branch
-        ]);
+        $branchs=Branch::all();
+         return $this->sendResponse($branchs, 'Branch details retrieved successfully.');
+
     }
 
     /**
@@ -55,11 +53,7 @@ class BranchController extends Controller
             $branch->name = $request->name;
             $branch->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Branch office successfully Registered',
-            'branch_office' => $branch,
-            ]);
+        return $this->sendResponse($branch,'Branch Created Successfully!',201);
         }
     }
 
@@ -72,10 +66,8 @@ class BranchController extends Controller
     public function show($id)
     {
         $branch= Branch::find($id);
-        return response()->json([
-            'status'=> 'success',
-            'branch_office'=>$branch
-        ]);
+        return $branch ? $this->sendResponse($branch, 'Branch Detail retrieved Successfully!', 200) 
+        : $this->sendError('Branch not found.');
     }
 
     /**
@@ -106,12 +98,8 @@ class BranchController extends Controller
         $branch->name = $request->name;
         $branch->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Branch office Updated successfully',
-            'branch_office' => $branch
-        ]);
-
+        return $branch ? $this->sendResponse($branch, 'Branch Updated Successfully!!', 200)
+         : $this->sendError('Branch not found.');
     }
 
     /**
@@ -124,10 +112,7 @@ class BranchController extends Controller
     {
         $branch = Branch::find($id);
         $branch->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Branch office deleted successfully',
-            'branch_office' => $branch,
-        ]);
+        return $branch ? $this->sendResponse($branch, 'Branch Delated Successfully!!', 200) 
+        : $this->sendError('Branch not found.');
     }
 }

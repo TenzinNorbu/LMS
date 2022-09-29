@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApplicantInfo;
+use Illuminate\Support\Facades\Crypt;
+
 
 class ApplicantInfoController extends Controller
 {
@@ -20,11 +22,9 @@ class ApplicantInfoController extends Controller
      */
     public function index()
     {
-        $applicant=ApplicantInfo::all();
-        return response()->json([
-            'status'=>'success',
-            'applicant_detail' => $applicant
-        ]);
+        $applicants=ApplicantInfo::all();
+        return $this->sendResponse($applicants, 'Applicant details.');
+
     }
 
     /**
@@ -57,28 +57,17 @@ class ApplicantInfoController extends Controller
         
         if(!($validator->fails())) {
             $applicant = new ApplicantInfo;
-            $applicant->cid_no = $request->cid_no;
-            $applicant->name = $request->name;
+            $applicant->cid_no =Crypt::encryptString($request->cid_no);
+            $applicant->name =Crypt::encryptString($request->name);
             $applicant->gender = $request->gender;
             $applicant->dzongkhag_id = $request->dzongkhag_id;
             $applicant->gewog_id = $request->gewog_id;
             $applicant->village_id = $request->village_id; 
-            $applicant->contact_no = $request->contact_no;
+            $applicant->contact_no =Crypt::encryptString($request->contact_no);
             $applicant->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Applicant successfully Registered',
-            'applicant detail' => $applicant,
-            ]);
+            return $this->sendResponse($applicant,'Applicant Created Successfully!',201);
         }
-        else{
-            return response()->json([
-                'errors'=>$validator->errors()->all(),
-                'message' => 'Applicant submittion Failed'
-            ],401);
-        }
-
     }
 
     /**
@@ -90,17 +79,8 @@ class ApplicantInfoController extends Controller
     public function show($id)
     {
         $applicant=ApplicantInfo::find($id);
-        if (!$applicant) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'applicant not Found',
-            ]);
-        }
-        return response()->json([
-            'status' => 'success',
-            'message' => 'applicant details',
-            'applicant detail' => $applicant
-        ]);
+        return $applicant ? $this->sendResponse($applicant, 'Applicant Detail retrieved Successfully!', 200) 
+            : $this->sendError('Applicant not found.');
     }
 
     /**
@@ -134,20 +114,18 @@ class ApplicantInfoController extends Controller
         ]);
         
             $applicant =ApplicantInfo::find($id);
-            $applicant->cid_no = $request->cid_no;
-            $applicant->name = $request->name;
+            $applicant->cid_no =Crypt::encryptString($request->cid_no);
+            $applicant->name =Crypt::encryptString($request->name);
             $applicant->gender = $request->gender;
             $applicant->dzongkhag_id = $request->dzongkhag_id;
             $applicant->gewog_id = $request->gewog_id;
             $applicant->village_id = $request->village_id; 
-            $applicant->contact_no = $request->contact_no;
+            $applicant->contact_no =Crypt::encryptString($request->contact_no);
             $applicant->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Applicant updated successfully',
-            'applicant detail' => $applicant,
-            ]);
+            return $applicant ? $this->sendResponse($applicant, 'Applicant Updated Successfully!', 200) 
+            : $this->sendError('Applicant not found.');
+
     }
 
     /**
@@ -160,10 +138,9 @@ class ApplicantInfoController extends Controller
     {
         $applicant = ApplicantInfo::find($id);
         $applicant->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'applicant deleted successfully',
-            'applicant detail' => $applicant,
-        ]);
+        
+        return $applicant ? $this->sendResponse($applicant, 'Applicant Deleted Successfully!', 200) 
+        : $this->sendError('Applicant not found.');
+
     }
 }

@@ -6,24 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use DB;
 
 class RoleController extends Controller
 {
     public function __construct() {
          $this->middleware('auth:api', ['except' => ['role']]);
      }
-        // function __construct()
-        // {
-        //     //  $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-            //  $this->middleware('permission:role-create', ['only' => ['create','store']]);
-            //  $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-            //  $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-
-            //
-   //     };
-    
-  //  }
     /**
      * Display a listing of the resource.
      *
@@ -33,11 +21,8 @@ class RoleController extends Controller
     {
         //$roles = Role::orderBy('id','DESC')->paginate(5);
         $roles = Role::all();
-        return response()->json([
-            'status' => 'success',
-            'message'=>'Role details',
-            'role' => $roles,
-        ]);
+        return $this->sendResponse($roles, 'Roles details.');
+
     }
 
     /**
@@ -66,11 +51,7 @@ class RoleController extends Controller
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
         
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Role created successfully',
-            'role' => $role,
-        ]);
+        return $this->sendResponse($role,'Role Created Successfully!',201);
         
     }
 
@@ -86,12 +67,9 @@ class RoleController extends Controller
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
             ->get();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Role-permission details',
-                'role' => $role,
-                'rolepermission' => $rolePermissions,
-            ]);
+
+        return $rolePermissions ? $this->sendResponse($rolePermissions, 'Role Detail retrieved Successfully!', 200) 
+            : $this->sendError('Role not found.');
     }
 
     /**
@@ -124,11 +102,8 @@ class RoleController extends Controller
         $role->save();
     
         $role->syncPermissions($request->input('permission'));
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Role update successfully',
-            'role' => $role,
-        ]);
+        return $role ? $this->sendResponse($role, 'Role Updated Successfully!!', 200)
+         : $this->sendError('Role not found.');
     }
 
     /**
@@ -139,12 +114,9 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $role=DB::table("roles")->where('id',$id)->delete();
-       
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Role deleted successfully',
-            'role' => $role,
-        ]);
+        $role = Role::find($id);
+        $role->delete();       
+        return $role ? $this->sendResponse($role, 'Role Delete Successfully!!', 200)
+        : $this->sendError('Role not found.');
     }
 }

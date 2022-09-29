@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('gender');
             $table->string('emp_id');
-            $table->integer('contact_no');
+            $table->string('contact_no');
             $table->integer('branch_id')
             ->references('id')
             ->on('branchs');

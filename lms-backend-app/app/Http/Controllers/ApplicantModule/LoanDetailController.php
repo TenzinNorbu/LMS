@@ -5,7 +5,6 @@ namespace App\Http\Controllers\ApplicantModule;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
 use App\Models\LoanDetail;
 
 class LoanDetailController extends Controller
@@ -21,10 +20,7 @@ class LoanDetailController extends Controller
     public function index()
     {
         $loan=LoanDetail::all();
-        return reponse()->json([
-            'status'=> 'success',
-            'load details'=> $loan
-        ]);
+        return $this->sendResponse($loan, 'Loan details.');
     }
 
     /**
@@ -64,17 +60,7 @@ class LoanDetailController extends Controller
             $loan->loan_end_date = $request->loan_end_date;
             $loan->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Loan Detail added successfully',
-            'loan detail' => $loan,
-            ]);
-        }
-        else{
-            return response()->json([
-                'errors'=>$validator->errors()->all(),
-                'message' => 'Loan detail submittion Failed'
-            ],401);
+            return $this->sendResponse($loan,'Loan Created Successfully!',201);
         }
 
     }
@@ -88,10 +74,8 @@ class LoanDetailController extends Controller
     public function show($id)
     {
         $loan = LoanDetail::all($id);
-        return response()->json([
-            'status' => 'success',
-            'loan detail' => $loan
-        ]);
+        return $loan ? $this->sendResponse($loan, 'Loan Detail retrieved Successfully!', 200) 
+        : $this->sendError('Loan not found.');
     }
 
     /**
@@ -132,11 +116,8 @@ class LoanDetailController extends Controller
             $loan->loan_end_date = $request->loan_end_date;
             $loan->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Loan Detail updated successfully',
-            'loan detail' => $loan,
-            ]);
+            return $loan ? $this->sendResponse($loan, 'Loan Updated Successfully!', 200) 
+            : $this->sendError('Loan not found.');
     }
 
     /**
@@ -149,10 +130,7 @@ class LoanDetailController extends Controller
     {
         $loan=LoanDetail::fine($id);
         $loan->delete();
-        return response()->json([
-         'status'=> 'success',
-         'message' => 'Loan detail deleted successfully',
-         'loan detail' => $loan
-        ]);
+        return $loan ? $this->sendResponse($loan, 'Loan Deleted Successfully!', 200) 
+        : $this->sendError('Loan not found.');
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Crypt;
+
 
 
 class CreateAdminUserSeeder extends Seeder
@@ -20,7 +22,7 @@ class CreateAdminUserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'cid_no' => '10603002424',
+            'cid_no' =>Crypt::encryptString('10603002424'),
             'name' => 'tenzin', 
             'gender'=> 'M',
             'emp_id'=> 'BIL/123',

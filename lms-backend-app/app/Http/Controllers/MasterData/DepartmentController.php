@@ -20,10 +20,7 @@ class DepartmentController extends Controller
     public function index()
     {
         $department=Department::all();
-        return response()->json([
-            'status' => 'success',
-            'department' => $department
-        ]);
+        return $this->sendResponse($department, 'Department details retrieved successfully.');
     }
 
     /**
@@ -53,11 +50,8 @@ class DepartmentController extends Controller
             $department->name = $request->name;
             $department->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Department added successfully',
-            'deaprtment' => $department,
-            ]);
+            return $this->sendResponse($department,'Department Created Successfully!',201);
+
         }
     }
 
@@ -70,10 +64,8 @@ class DepartmentController extends Controller
     public function show($id)
     {
         $department= Department::find($id);
-        return response()->json([
-            'status'=> 'success',
-            'department'=>$department
-        ]);
+        return $department ? $this->sendResponse($department, 'Department Detail Retrieved Successfully!!', 200) 
+        : $this->sendError('Department not found.');
     }
 
     /**
@@ -104,11 +96,8 @@ class DepartmentController extends Controller
         $department->name = $request->name;
         $department->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Department Updated successfully',
-            'department' => $department
-        ]);
+        return $department ? $this->sendResponse($department, 'Department Updated Successfully!!', 200) 
+        : $this->sendError('Department not found.');
 
     }
 
@@ -122,10 +111,7 @@ class DepartmentController extends Controller
     {
         $department = Department::find($id);
         $department->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Department deleted successfully',
-            'department' => $department,
-        ]);
+        return $department ? $this->sendResponse($department, 'Department Deleted Successfully!!', 200) 
+        : $this->sendError('Department not found.');
     }
 }

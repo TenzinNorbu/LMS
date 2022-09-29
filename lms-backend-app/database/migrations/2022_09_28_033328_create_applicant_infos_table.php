@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('dzongkhag_id');
             $table->integer('gewog_id');
             $table->integer('village_id');
-            $table->integer('contact_no');
+            $table->string('contact_no');
             $table->timestamps();
         });
     }

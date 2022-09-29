@@ -11,8 +11,9 @@ use App\Models\Department;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use DB;
-//use Illuminate\Support\Arr;
-//use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
+
 use Auth;
 
 class UserController extends Controller
@@ -23,11 +24,23 @@ class UserController extends Controller
 
     public function index()
     {
+        // $users = User::select([
+        //     //'users.*',
+        //     'users.cid_no'
+        //      => Crypt::decryptString('cid_no') 
+        //     //Post::selectRaw('MAX(created_at)')
+        //     //        ->whereColumn('user_id', 'users.id')
+        // ])->get();
        $users = User::all();
-        return response()->json([
-            'status' => 'success',
-            'user' => $users,
-        ]);
+      // try {
+       //$user = decrypt($users->cid_no);
+       return $this->sendResponse($users,'Users Details');
+
+    // } catch (DecryptException $e) {
+        //
+     //}
+      // $user = Crypt::decryptString($users->cid_no);
+        // return $this->sendResponse($user,'Users Details');
         }
 
     public function store(Request $request)
@@ -39,7 +52,7 @@ class UserController extends Controller
             'emp_id' => 'required|string',
             'branch_id' => 'required|integer',
             'department_id' => 'required|integer',
-            'contact_no' => 'required|integer',
+            'contact_no' => 'required',
             'roles' => 'required|string',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
@@ -47,45 +60,27 @@ class UserController extends Controller
         
         if(!($validator->fails())) {
             $user = new User;
-            $user->cid_no = $request->cid_no;
-            $user->name = $request->name;
+            $user->cid_no =Crypt::encryptString($request->cid_no);
+            $user->name = Crypt::encryptString($request->name);
             $user->emp_id = $request->emp_id;
             $user->gender = $request->gender;
             $user->branch_id = $request->branch_id;
             $user->department_id = $request->department_id;
-            $user->contact_no = $request->contact_no;
-            $user->email = $request->email;
+            $user->contact_no =Crypt::encryptString($request->contact_no);
+            $user->email = Crypt::encryptString($request->email);
             $user->password = Hash::make($request->password);
             $user->assignRole($request->input('roles'));
             $user->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User successfully Registered',
-            'user' => $user,
-            ]);
-        }
-        else{
-            return response()->json([
-                'errors'=>$validator->errors()->all(),
-                'message' => 'User Registration Failed'
-            ],401);
+            return $this->sendResponse($user,'User Created Successfully!',201);
         }
     }
 
     public function show($id)
     {
         $user = User::find($id);
-        if (!$user) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'User not Found',
-        ]);
-    }
-    return response()->json([
-        'status' => 'success',
-        'user' => $user,
-       ]);
+        return $user ? $this->sendResponse($user, 'User Detail retrieved Successfully!', 200) 
+        : $this->sendError('User not found.');
     }
 
     public function update(Request $request, $id)
@@ -102,11 +97,11 @@ class UserController extends Controller
         ]);
 
         $user = User::find($id);
-        $user->cid_no = $request->cid_no;
-        $user->name = $request->name;
+        $user->cid_no =Crypt::encryptString($request->cid_no);
+        $user->name = Crypt::encryptString($request->name);
         $user->gender = $request->gender;
         $user->emp_id = $request->emp_id;
-        $user->contact_no = $request->contact_no;
+        $user->contact_no =Crypt::encryptString($request->contact_no);
         $user->branch_id = $request->branch_id;
         $user->department_id = $request->department_id;
         //$user->save();
@@ -115,21 +110,16 @@ class UserController extends Controller
         $user->assignRole($request->input('roles'));
         $user->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User updated successfully',
-            'user' => $user,
-        ]);
+        return $user ? $this->sendResponse($user, 'User updated Successfully!', 200) 
+        : $this->sendError('User not found.');
+
     }
 
     public function destroy($id)
     {
         $user = User::find($id);
         $user->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User deleted successfully',
-            'user' => $user,
-        ]);
+        return $branch ? $this->sendResponse($branch, 'User deleted Successfully!', 200) 
+        : $this->sendError('User not found.');
     }
 }
