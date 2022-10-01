@@ -11,9 +11,6 @@ use App\Models\Department;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use DB;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
-
 use Auth;
 
 class UserController extends Controller
@@ -24,30 +21,15 @@ class UserController extends Controller
 
     public function index()
     {
-        // $users = User::select([
-        //     //'users.*',
-        //     'users.cid_no'
-        //      => Crypt::decryptString('cid_no') 
-        //     //Post::selectRaw('MAX(created_at)')
-        //     //        ->whereColumn('user_id', 'users.id')
-        // ])->get();
-       $users = User::all();
-      // try {
-       //$user = decrypt($users->cid_no);
+       $users = User::get();
        return $this->sendResponse($users,'Users Details');
-
-    // } catch (DecryptException $e) {
-        //
-     //}
-      // $user = Crypt::decryptString($users->cid_no);
-        // return $this->sendResponse($user,'Users Details');
-        }
+    }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'cid_no' => 'required|string|min:11|max:11',
+            'name' => 'required|string',
+            'cid_no' => 'required|string',
             'gender' => 'required|string',
             'emp_id' => 'required|string',
             'branch_id' => 'required|integer',
@@ -60,14 +42,14 @@ class UserController extends Controller
         
         if(!($validator->fails())) {
             $user = new User;
-            $user->cid_no =Crypt::encryptString($request->cid_no);
-            $user->name = Crypt::encryptString($request->name);
+            $user->cid_no =$request->cid_no;
+            $user->name = $request->name;
             $user->emp_id = $request->emp_id;
             $user->gender = $request->gender;
             $user->branch_id = $request->branch_id;
             $user->department_id = $request->department_id;
-            $user->contact_no =Crypt::encryptString($request->contact_no);
-            $user->email = Crypt::encryptString($request->email);
+            $user->contact_no = $request->contact_no;
+            $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->assignRole($request->input('roles'));
             $user->save();
@@ -86,22 +68,22 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'cid_no' => 'required|string|min:11|max:11',
+            'name' => 'required|string',
+            'cid_no' => 'required|string|min|11|max|11',
             'emp_id' => 'required|string',
             'gender' => 'required|string',
             'branch_id' => 'required|string',
             'department_id' => 'required|string',
-            'contact_no' => 'required|integer',
+            'contact_no' => 'required|string',
             'roles' => 'required|string',
         ]);
 
         $user = User::find($id);
-        $user->cid_no =Crypt::encryptString($request->cid_no);
-        $user->name = Crypt::encryptString($request->name);
+        $user->cid_no =$request->cid_no;
+        $user->name =$request->name;
         $user->gender = $request->gender;
         $user->emp_id = $request->emp_id;
-        $user->contact_no =Crypt::encryptString($request->contact_no);
+        $user->contact_no =$request->contact_no;
         $user->branch_id = $request->branch_id;
         $user->department_id = $request->department_id;
         //$user->save();

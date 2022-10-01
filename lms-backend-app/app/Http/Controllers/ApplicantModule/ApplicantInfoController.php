@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\ApplicantInfo;
-use Illuminate\Support\Facades\Crypt;
 
 
 class ApplicantInfoController extends Controller
@@ -57,13 +56,13 @@ class ApplicantInfoController extends Controller
         
         if(!($validator->fails())) {
             $applicant = new ApplicantInfo;
-            $applicant->cid_no =Crypt::encryptString($request->cid_no);
-            $applicant->name =Crypt::encryptString($request->name);
+            $applicant->cid_no =$request->cid_no;
+            $applicant->name =$request->name;
             $applicant->gender = $request->gender;
             $applicant->dzongkhag_id = $request->dzongkhag_id;
             $applicant->gewog_id = $request->gewog_id;
             $applicant->village_id = $request->village_id; 
-            $applicant->contact_no =Crypt::encryptString($request->contact_no);
+            $applicant->contact_no =$request->contact_no;
             $applicant->save();
 
             return $this->sendResponse($applicant,'Applicant Created Successfully!',201);
@@ -114,13 +113,13 @@ class ApplicantInfoController extends Controller
         ]);
         
             $applicant =ApplicantInfo::find($id);
-            $applicant->cid_no =Crypt::encryptString($request->cid_no);
-            $applicant->name =Crypt::encryptString($request->name);
+            $applicant->cid_no =$request->cid_no;
+            $applicant->name =$request->name;
             $applicant->gender = $request->gender;
             $applicant->dzongkhag_id = $request->dzongkhag_id;
             $applicant->gewog_id = $request->gewog_id;
             $applicant->village_id = $request->village_id; 
-            $applicant->contact_no =Crypt::encryptString($request->contact_no);
+            $applicant->contact_no =$request->contact_no;
             $applicant->save();
 
             return $applicant ? $this->sendResponse($applicant, 'Applicant Updated Successfully!', 200) 

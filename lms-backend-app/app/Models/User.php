@@ -11,6 +11,10 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 //use App\Traits\UUID;
 use Spatie\Permission\Traits\HasRoles;
 
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
+
+
 
 
 class User extends Authenticatable implements JWTSubject
@@ -66,6 +70,49 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims() {
         return [];
-    }    
+    }  
+    
+    public function setCidNoAttribute($value){
+      $this->attributes['cid_no']=Crypt::encryptString($value);
+    }
+    public function setNameAttribute($value){
+        $this->attributes['name']=Crypt::encryptString($value);
+      }
+    public function setContactNoAttribute($value){
+        $this->attributes['contact_no']=Crypt::encryptString($value);
+      }
+    // public function setEmailAttribute($value){
+    //     $this->attributes['email']=Crypt::encryptString($value);
+    //   }
 
+    
+      public function getCidNoAttribute($value){
+      try{
+        return Crypt::decryptString($value);
+      }catch(\Exception $e){
+          return $value;    
+      }
+    }  
+
+    public function getNameAttribute($value){
+        try{
+          return Crypt::decryptString($value);
+        }catch(\Exception $e){
+            return $value;    
+        }
+      }  
+    public function getContactNoAttribute($value){
+        try{
+          return Crypt::decryptString($value);
+        }catch(\Exception $e){
+            return $value;    
+        }
+      }  
+    // public function getEmailAttribute($value){
+    //     try{
+    //       return Crypt::decryptString($value);
+    //     }catch(\Exception $e){
+    //         return $value;    
+    //     }
+    //   }  
 }

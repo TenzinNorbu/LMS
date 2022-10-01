@@ -22,7 +22,7 @@ class CreateAdminUserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'cid_no' =>Crypt::encryptString('10603002424'),
+            'cid_no' =>'10603002424',
             'name' => 'tenzin', 
             'gender'=> 'M',
             'emp_id'=> 'BIL/123',

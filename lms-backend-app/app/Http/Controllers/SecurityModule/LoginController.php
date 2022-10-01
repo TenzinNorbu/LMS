@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 
-
-
 class LoginController extends Controller
 {
      public function __construct()
@@ -24,7 +22,7 @@ class LoginController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-        $user = $request->only('email', 'password');
+         $user = $request->only('email','password');
             try{
                 if (!$token = JWTAuth::attempt($user)) {
                     return response()->json([
@@ -39,8 +37,7 @@ class LoginController extends Controller
             }
             return $this->createToken($token);
     }
-
-
+    
     public function logout()
     {
         auth()->logout();
