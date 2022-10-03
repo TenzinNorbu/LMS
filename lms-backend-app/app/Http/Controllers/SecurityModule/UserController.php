@@ -21,7 +21,7 @@ class UserController extends Controller
 
     public function index()
     {
-       $users = User::get();
+       $users = User::all();
        return $this->sendResponse($users,'Users Details');
     }
 
@@ -79,11 +79,11 @@ class UserController extends Controller
         ]);
 
         $user = User::find($id);
-        $user->cid_no =$request->cid_no;
-        $user->name =$request->name;
+        $user->cid_no = $request->cid_no;
+        $user->name = $request->name;
         $user->gender = $request->gender;
         $user->emp_id = $request->emp_id;
-        $user->contact_no =$request->contact_no;
+        $user->contact_no = $request->contact_no;
         $user->branch_id = $request->branch_id;
         $user->department_id = $request->department_id;
         //$user->save();

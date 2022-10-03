@@ -81,9 +81,9 @@ class User extends Authenticatable implements JWTSubject
     public function setContactNoAttribute($value){
         $this->attributes['contact_no']=Crypt::encryptString($value);
       }
-    // public function setEmailAttribute($value){
-    //     $this->attributes['email']=Crypt::encryptString($value);
-    //   }
+    public function setEmailAttribute($value){
+        $this->attributes['email']=Crypt::encryptString($value);
+      }
 
     
       public function getCidNoAttribute($value){
@@ -108,11 +108,11 @@ class User extends Authenticatable implements JWTSubject
             return $value;    
         }
       }  
-    // public function getEmailAttribute($value){
-    //     try{
-    //       return Crypt::decryptString($value);
-    //     }catch(\Exception $e){
-    //         return $value;    
-    //     }
-    //   }  
+    public function getEmailAttribute($value){
+        try{
+          return Crypt::decryptString($value);
+        }catch(\Exception $e){
+            return $value;    
+        }
+      }  
 }
