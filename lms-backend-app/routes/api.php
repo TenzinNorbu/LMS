@@ -6,13 +6,11 @@ use App\Http\Controllers\SecurityModule\LoginController;
 use App\Http\Controllers\SecurityModule\RoleController;
 use App\Http\Controllers\SecurityModule\UserController;
 use App\Http\Controllers\SecurityModule\ProfileController;
+use App\Http\Controllers\SecurityModule\ChangeAndForgotPasswordController;
 use App\Http\Controllers\MasterData\BranchController;
 use App\Http\Controllers\MasterData\DepartmentController;
 use App\Http\Controllers\ApplicantModule\ApplicantInfoController;
 use App\Http\Controllers\ApplicantModule\LoanDetailController;
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -29,28 +27,32 @@ use App\Http\Controllers\ApplicantModule\LoanDetailController;
 //     return $request->user();
 // });
 
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::post('/user-registration', [UserController::class, 'store']);
+
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'jwt.verify',
     'prefix' => 'auth'
-], function ($router) {
-    Route::post('/login', [LoginController::class, 'login']);
-    Route::post('/logout', [LoginController::class, 'logout']);
-    Route::post('/refresh-token', [LoginController::class, 'refreshToken']);
-    Route::post('/user-create', [UserController::class, 'store']);
+], function ($router) { 
     Route::get('/user-lists', [UserController::class, 'index']);
     Route::get('/user-show/{id}', [UserController::class, 'show']);
     Route::post('/user-update/{id}', [UserController::class, 'update']);
     Route::post('/user-delete/{id}', [UserController::class, 'destroy']);
+    Route::post('/refresh-token', [LoginController::class, 'refreshToken']);
+    Route::post('/logout', [LoginController::class, 'logout']);
 
+//role
     Route::post('/role-create', [RoleController::class, 'store']);
     Route::get('/role-lists', [RoleController::class, 'index']);
     Route::get('/role-show/{id}', [RoleController::class, 'show']);
     Route::post('/role-update/{id}', [RoleController::class, 'update']);
-    Route::post('/role-delete/{id}', [RoleController::class, 'destroy']);   
+    Route::post('/role-delete/{id}', [RoleController::class, 'destroy']);  
+    
+    Route::post('/change-password/{id}', [ChangeAndForgotPasswordController::class, 'updatePassword']);
 });
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'jwt.verify',
     'prefix' => 'branch'
 ], function ($router) {
     Route::post('/create', [BranchController::class, 'store']);
@@ -61,7 +63,7 @@ Route::group([
 
 });
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'jwt.verify',
     'prefix' => 'department'
 ], function ($router) {
     Route::post('/create', [DepartmentController::class, 'store']);

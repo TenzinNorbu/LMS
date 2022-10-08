@@ -14,48 +14,13 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class LoginController extends Controller
 {
-     public function __construct()
-     {
-        $this->middleware('auth:api', ['except' => ['login']]);    
-     }
-     public function logins(Request $request)
-     {
-        $user=User::where('password',$request->input('password'))->get();
-        dd($user);
-        if(Crypt::decrypt($user->email)==$request->input('password')){
-         return $this->createToken();
-        }
-    //     $request->validate([
-    //         'email' => 'required|string|email',
-    //         'password' => 'required|string',
-    //     ]);
-    //     $user = $request->only('email','password');
-    //    // try{
-    //      if (!$token=JWTAuth::attempt(['email' => sha1($request->email), 'password' => ($request->password)])) {
-    //              // Authentication passed...
-    //            // return $this->createToken($token);
-    //             // return response()->json([
-    //             //     'status' => 'error',
-    //             //      'message' => 'Invalid Credentials or User not found'
-    //             //  ], 401);
-    //          }
-         
-    //     //  } catch (JWTException $e) {
-    //     //      return response()->json([
-    //     //          'error' => 'Could not create token'
-    //     //      ], 500);
-    //     //  }
-    //      return $this->createToken($token);
-
-     }
- 
-    public function login(Request $request)
+    public function authenticate(Request $request)
     {
         $request->validate([
-            'emp_id' => 'required|string',
+            'user_id' => 'required|string',
             'password' => 'required|string',
         ]);
-        $user = $request->only('emp_id','password');
+        $user = $request->only('user_id','password');
             try{
                 if (!$token = JWTAuth::attempt($user)) {
                     return response()->json([
@@ -86,6 +51,7 @@ class LoginController extends Controller
     }
 
     protected function createToken($token){
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -93,5 +59,4 @@ class LoginController extends Controller
             'payload' => auth()->user(),
         ]);
     }
-
 }

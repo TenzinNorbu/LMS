@@ -9,9 +9,9 @@ use App\Models\Department;
 
 class DepartmentController extends Controller
 {
-    public function __construct() {
-        $this->middleware('auth:api', ['except' => ['department']]);
-    }
+    // public function __construct() {
+    //     $this->middleware('auth:api', ['except' => ['department']]);
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -42,12 +42,16 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
+            'department_code' => 'required|string|between:2,100',
+            'branch_id' => 'required',
+            'department_name' => 'required|string|between:2,100',
         ]);
         
         if(!($validator->fails())) {
             $department = new Department;
-            $department->name = $request->name;
+            $department->department_code = $request->department_code;
+            $department->branch_id = $request->branch_id;
+            $department->department_name = $request->department_name;
             $department->save();
 
             return $this->sendResponse($department,'Department Created Successfully!',201);
@@ -89,11 +93,15 @@ class DepartmentController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
+            'department_code' => 'required|string|between:2,100',
+            'branch_id' =>'required',
+            'department_name' => 'required|string|between:2,100',
         ]);
 
         $department = Department::find($id);
-        $department->name = $request->name;
+        $department->department_code = $request->department_code;
+        $department->branch_id = $request->branch_id;
+        $department->department_name = $request->department_name;
         $department->save();
 
         return $department ? $this->sendResponse($department, 'Department Updated Successfully!!', 200) 

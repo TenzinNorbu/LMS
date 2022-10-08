@@ -29,16 +29,18 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'cid_no',
-        'gender',
-        'emp_id',
+        'employee_full_name',
+        'employment_id',
         'branch_id',
         'department_id',
-        'contact_no',
-        'profile_url',
         'email',
+        'designation',
+        'phone_no',
+        'profile_url',        
+        'user_id',
         'password',
+        //'confirm_password',
+        'user_status'
     ];
 
     /**
@@ -72,36 +74,46 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }  
     
-    public function setCidNoAttribute($value){
-      $this->attributes['cid_no']=Crypt::encryptString($value);
+    public function setEmployeeFullNameAttribute($value){
+      $this->attributes['employee_full_name']=Crypt::encryptString($value);
     }
-    public function setNameAttribute($value){
-        $this->attributes['name']=Crypt::encryptString($value);
+    public function setEmploymentIdAttribute($value){
+        $this->attributes['employment_id']=Crypt::encryptString($value);
       }
-    public function setContactNoAttribute($value){
-        $this->attributes['contact_no']=Crypt::encryptString($value);
+    public function setPhoneNoAttribute($value){
+        $this->attributes['phone_no']=Crypt::encryptString($value);
       }
     public function setEmailAttribute($value){
         $this->attributes['email']=Crypt::encryptString($value);
       }
+    public function setDepartmentIdAttribute($value){
+        $this->attributes['department_id']=Crypt::encryptString($value);
+      }
+    public function setBranchIdAttribute($value){
+        $this->attributes['branch_id']=Crypt::encryptString($value);
+      }
+    // public function setUserIdAttribute($value){
+    //     $this->attributes['user_id']=Crypt::encryptString($value);
+    //   }
+    public function setDesignationAttribute($value){
+        $this->attributes['designation']=Crypt::encryptString($value);
+      }
 
-    
-      public function getCidNoAttribute($value){
+    public function getEmployeeFullNameAttribute($value){
       try{
         return Crypt::decryptString($value);
       }catch(\Exception $e){
           return $value;    
       }
     }  
-
-    public function getNameAttribute($value){
+    public function getEmploymentIdAttribute($value){
         try{
           return Crypt::decryptString($value);
         }catch(\Exception $e){
             return $value;    
         }
       }  
-    public function getContactNoAttribute($value){
+    public function getPhoneNoAttribute($value){
         try{
           return Crypt::decryptString($value);
         }catch(\Exception $e){
@@ -109,6 +121,34 @@ class User extends Authenticatable implements JWTSubject
         }
       }  
     public function getEmailAttribute($value){
+        try{
+          return Crypt::decryptString($value);
+        }catch(\Exception $e){
+            return $value;    
+        }
+      }  
+    //   public function getUserIdAttribute($value){
+    //     try{
+    //       return Crypt::decryptString($value);
+    //     }catch(\Exception $e){
+    //         return $value;    
+    //     }
+    //   }  
+    public function getDesignationAttribute($value){
+        try{
+          return Crypt::decryptString($value);
+        }catch(\Exception $e){
+            return $value;    
+        }
+      }  
+    public function getBranchIdAttribute($value){
+        try{
+          return Crypt::decryptString($value);
+        }catch(\Exception $e){
+            return $value;    
+        }
+      }  
+      public function getDepartmentIdAttribute($value){
         try{
           return Crypt::decryptString($value);
         }catch(\Exception $e){

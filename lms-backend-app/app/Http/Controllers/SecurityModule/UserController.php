@@ -9,16 +9,14 @@ use App\Models\User;
 use App\Models\Branch;
 use App\Models\Department;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
+//use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+//use Symfony\Component\HttpFoundation\Response;
+//use Spatie\Permission\Models\Role;
 use DB;
-use Auth;
+//use JWTAuth;
 
 class UserController extends Controller
 {
-    public function __construct() {
-        $this->middleware('auth:api', ['except' => ['user']]);
-    }
-
     public function index()
     {
        $users = User::all();
@@ -28,33 +26,31 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'cid_no' => 'required|string',
-            'gender' => 'required|string',
-            'emp_id' => 'required|string',
-            'branch_id' => 'required|integer',
-            'department_id' => 'required|integer',
-            'contact_no' => 'required',
-            'roles' => 'required|string',
+            'employee_full_name' => 'required|string',
+            'employment_id' => 'required|string',
+            'branch_id' => 'required|string',
+            'department_id' => 'required|string',
+            'designation' => 'required|string',
+            'phone_no' => 'required',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6',
+            'user_id' => 'required|string',
+            'password' => 'required|confirmed|min:6',
         ]);
         
-        if(!($validator->fails())) {
+        if(($validator->fails())) {
             $user = new User;
-            $user->cid_no =$request->cid_no;
-            $user->name = $request->name;
-            $user->emp_id = $request->emp_id;
-            $user->gender = $request->gender;
+            $user->employee_full_name = $request->employee_full_name;
+            $user->employment_id = $request->employment_id;
             $user->branch_id = $request->branch_id;
             $user->department_id = $request->department_id;
-            $user->contact_no = $request->contact_no;
-            $user->email = $request->email;
+            $user->email= $request->email;
+            $user->designation= $request->designation;
+            $user->phone_no = $request->phone_no;
+            $user->user_id = $request->user_id;
             $user->password = Hash::make($request->password);
-            $user->assignRole($request->input('roles'));
             $user->save();
 
-            return $this->sendResponse($user,'User Created Successfully!',201);
+        return $this->sendResponse($user,'User Created Successfully!',201);
         }
     }
 
@@ -68,28 +64,30 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'cid_no' => 'required|string|min|11|max|11',
-            'emp_id' => 'required|string',
-            'gender' => 'required|string',
+            'employee_full_name' => 'required|string',
+            'employment_id' => 'required|string',
             'branch_id' => 'required|string',
             'department_id' => 'required|string',
-            'contact_no' => 'required|string',
-            'roles' => 'required|string',
+            'phone_no' => 'required|string',
+            'designation' => 'required|string',
+            'user_id' => 'required|string',
+            'email' => 'required|string',
+            'user_status' => 'required|string',
         ]);
 
         $user = User::find($id);
-        $user->cid_no = $request->cid_no;
-        $user->name = $request->name;
-        $user->gender = $request->gender;
-        $user->emp_id = $request->emp_id;
-        $user->contact_no = $request->contact_no;
+        $user->employee_full_name = $request->employee_full_name;
+        $user->employment_id = $request->employment_id;
         $user->branch_id = $request->branch_id;
         $user->department_id = $request->department_id;
-        //$user->save();
+        $user->phone_no = $request->phone_no;
+        $user->designation = $request->designation;
+        $user->user_id = $request->user_id;
+        $user->email = $request->email;
+        $user->user_status = $request->user_status;
 
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-        $user->assignRole($request->input('roles'));
+        // DB::table('model_has_roles')->where('model_id',$id)->delete();
+        // $user->assignRole($request->input('roles'));
         $user->save();
 
         return $user ? $this->sendResponse($user, 'User updated Successfully!', 200) 
@@ -104,4 +102,6 @@ class UserController extends Controller
         return $branch ? $this->sendResponse($branch, 'User deleted Successfully!', 200) 
         : $this->sendError('User not found.');
     }
+
+    
 }

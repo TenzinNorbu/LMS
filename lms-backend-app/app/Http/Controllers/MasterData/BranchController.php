@@ -7,13 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Branch;
 
-
 class BranchController extends Controller
 {
-    public function __construct() {
-        $this->middleware('auth:api', ['except' => ['branch']]);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -45,12 +40,14 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
+            'branch_code' => 'required|string|between:2,100',
+            'branch_name' => 'required|string|between:2,100',
         ]);
         
         if(!($validator->fails())) {
             $branch = new Branch;
-            $branch->name = $request->name;
+            $branch->branch_code = $request->branch_code;
+            $branch->branch_name = $request->branch_name;
             $branch->save();
 
         return $this->sendResponse($branch,'Branch Created Successfully!',201);
@@ -91,11 +88,13 @@ class BranchController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
+            'branch_code' => 'required|string|between:2,100',
+            'branch_name' => 'required|string|between:2,100',
         ]);
 
         $branch = Branch::find($id);
-        $branch->name = $request->name;
+        $branch->branch_code = $request->branch_code;
+        $branch->branch_name = $request->branch_name;
         $branch->save();
 
         return $branch ? $this->sendResponse($branch, 'Branch Updated Successfully!!', 200)

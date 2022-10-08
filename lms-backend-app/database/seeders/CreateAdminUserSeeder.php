@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -22,20 +21,19 @@ class CreateAdminUserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'cid_no' =>'10603002424',
-            'name' => 'tenzin', 
-            'gender'=> 'M',
-            'emp_id'=> 'BIL/123',
-            'contact_no'=>'17439160',
+            'employee_full_name' => 'LMS-ADMIN', 
+            'employment_id'=> 'BIL/123',
+            'phone_no'=>'12345678',
             'branch_id' =>'1',
             'department_id'=>'3',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('tenzin')
+            'designation'=>'PMU',
+            'email_id' => 'lms-admin@gmail.com',
+            'user_id' => 'LMS_ADMIN',
+            'password' => bcrypt('lms@1234'),
+            'confirm_password' => bcrypt('lms@1234')
         ]);
       
         $role = Role::create(['name' => 'Super Admin']);
-        // $role = Role::create(['name' => 'PmU']);
-        // $role = Role::create(['name' => 'User']);
 
         $permissions = Permission::pluck('id','id')->all();
      
