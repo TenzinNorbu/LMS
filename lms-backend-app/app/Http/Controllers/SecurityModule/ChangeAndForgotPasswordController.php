@@ -67,8 +67,6 @@ class ChangeAndForgotPasswordController extends Controller
       }
 
 
-
-
     //change password
 
     public function updatePassword(Request $request, $id)
@@ -86,9 +84,13 @@ class ChangeAndForgotPasswordController extends Controller
         #Update the new Password
         $user = User::find($id);
         $user->password = Hash::make($request->new_password);
+
+        DB::table('user_log_managements')->insert([
+            'user_id' =>auth()->user()->user_id, 
+            'password_change_date' => Carbon::now()
+          ]);
         $user->save();
         return $this->sendResponse($user,'Password changed successfully.');
     }
-
 
 }

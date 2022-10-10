@@ -10,6 +10,9 @@ use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Carbon\Carbon; 
+use DB;
+use Auth;
 
 
 class LoginController extends Controller
@@ -33,12 +36,22 @@ class LoginController extends Controller
                     'error' => 'Could not create token'
                 ], 500);
             }
-            return $this->createToken($token);
+            
+        DB::table('user_log_managements')->insert([
+            'user_id' =>auth()->user()->user_id, 
+            'login_date' => Carbon::now()
+          ]);
+        return $this->createToken($token);
     }
     
     public function logout()
     {
+        $currentUser=auth()->user()->user_id;
         auth()->logout();
+        DB::table('user_log_managements')->insert([
+            'user_id' =>$currentUser, 
+            'logout_date' => Carbon::now()
+          ]);
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',

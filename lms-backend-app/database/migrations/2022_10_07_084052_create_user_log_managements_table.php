@@ -14,14 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('user_log_managements', function (Blueprint $table) {
-            // $table->id();
-            // $table->integer('user_id')
-            // ->references('id')
-            // ->on('users');
-            $table->string('register_date');
-            $table->string('password_change_date');
-            $table->string('login_date');
-            $table->string('logout_date');
+            $table->id();
+            $table->string('user_id')
+            ->references('user_id')
+            ->on('users')->nullable();
+            $table->string('register_date')->nullable();
+            $table->string('password_change_date')->nullable();
+            $table->string('login_date')->nullable();
+            $table->string('logout_date')->nullable();
             $table->timestamps();
         });
     }

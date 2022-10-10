@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Branch;
 use App\Models\Department;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon; 
+
 //use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 //use Symfony\Component\HttpFoundation\Response;
 //use Spatie\Permission\Models\Role;
@@ -38,6 +40,7 @@ class UserController extends Controller
         ]);
         
         if(($validator->fails())) {
+
             $user = new User;
             $user->employee_full_name = $request->employee_full_name;
             $user->employment_id = $request->employment_id;
@@ -48,6 +51,11 @@ class UserController extends Controller
             $user->phone_no = $request->phone_no;
             $user->user_id = $request->user_id;
             $user->password = Hash::make($request->password);
+
+            DB::table('user_log_managements')->insert([
+                'user_id' => $request->user_id, 
+                'register_date' => Carbon::now()
+              ]);
             $user->save();
 
         return $this->sendResponse($user,'User Created Successfully!',201);
