@@ -10,12 +10,8 @@ use App\Models\Branch;
 use App\Models\Department;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon; 
-
-//use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-//use Symfony\Component\HttpFoundation\Response;
 //use Spatie\Permission\Models\Role;
 use DB;
-//use JWTAuth;
 
 class UserController extends Controller
 {
@@ -49,7 +45,7 @@ class UserController extends Controller
             $user->email= $request->email;
             $user->designation= $request->designation;
             $user->phone_no = $request->phone_no;
-            $user->user_id = $request->user_id;
+            $user->user_id =$request->user_id;
             $user->password = Hash::make($request->password);
 
             DB::table('user_log_managements')->insert([

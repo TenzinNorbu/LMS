@@ -76,7 +76,6 @@ class ChangeAndForgotPasswordController extends Controller
             'old_password' => 'required',
             'new_password' => 'required|confirmed',
         ]);
-
         // #Match The Old Password
         if(!Hash::check($request->old_password, auth()->user()->password)){
         return $this->sendError('Old Password Doesnt Match.');

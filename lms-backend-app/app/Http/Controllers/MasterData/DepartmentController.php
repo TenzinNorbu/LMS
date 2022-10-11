@@ -9,9 +9,6 @@ use App\Models\Department;
 
 class DepartmentController extends Controller
 {
-    // public function __construct() {
-    //     $this->middleware('auth:api', ['except' => ['department']]);
-    // }
     /**
      * Display a listing of the resource.
      *

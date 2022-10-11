@@ -39,7 +39,6 @@ class User extends Authenticatable implements JWTSubject
         'profile_url',        
         'user_id',
         'password',
-        //'confirm_password',
         'user_status'
     ];
 
@@ -127,13 +126,13 @@ class User extends Authenticatable implements JWTSubject
             return $value;    
         }
       }  
-    //   public function getUserIdAttribute($value){
-    //     try{
-    //       return Crypt::decryptString($value);
-    //     }catch(\Exception $e){
-    //         return $value;    
-    //     }
-    //   }  
+      // public function getUserIdAttribute($value){
+      //   try{
+      //     return Crypt::decryptString($value);
+      //   }catch(\Exception $e){
+      //       return $value;    
+      //   }
+      // }  
     public function getDesignationAttribute($value){
         try{
           return Crypt::decryptString($value);
