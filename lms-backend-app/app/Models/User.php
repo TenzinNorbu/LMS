@@ -82,9 +82,9 @@ class User extends Authenticatable implements JWTSubject
     public function setPhoneNoAttribute($value){
         $this->attributes['phone_no']=Crypt::encryptString($value);
       }
-    public function setEmailAttribute($value){
-        $this->attributes['email']=Crypt::encryptString($value);
-      }
+    // public function setEmailAttribute($value){
+    //     $this->attributes['email']=Crypt::encryptString($value);
+    //   }
     public function setDepartmentIdAttribute($value){
         $this->attributes['department_id']=Crypt::encryptString($value);
       }

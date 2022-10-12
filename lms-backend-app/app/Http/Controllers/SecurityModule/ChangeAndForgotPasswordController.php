@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon; 
-use Mail; 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Auth;
 use DB;
@@ -16,13 +16,14 @@ use DB;
 class ChangeAndForgotPasswordController extends Controller
 {
     //forgot password
-    public function sendResetLinkEmail(Request $request)
+public function resetLinkEmail(Request $request)
     {
-        dd('test');
         $request->validate([
-            'email' => 'required|email|exists:users',
+           'email' => 'required|email',
         ]);
-
+        $user=User::where('email','=', $request->email)->exists();
+       if($user){
+        
         $token = Str::random(64);
 
         DB::table('password_resets')->insert([
@@ -31,44 +32,64 @@ class ChangeAndForgotPasswordController extends Controller
             'created_at' => Carbon::now()
           ]);
 
-        Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
+        //Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
+            Mail::to(['token' => $token], function($message) use($request){
+            $message->from('tnorbu2424@gmail.com','test');
             $message->to($request->email);
             $message->subject('Reset Password');
         });
+        return response()->json([
+            'status' => 'success',
+            'message' => 'We have e-mailed your password reset link!']);
+      
+    }else{
 
-        return response()->json(['message', 'We have e-mailed your password reset link!']);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Your request email not found in the list.Please check your email Id!']);
     }
+
+}
 
     public function passwordReset(Request $request)
       {
           $request->validate([
-              'email' => 'required|email|exists:users',
-              'password' => 'required|string|min:6|confirmed',
-              'password_confirmation' => 'required'
+              'email' => 'required|email',
+             // 'password' => 'required|string|min:6|confirmed',
+              'password' => 'required',
+             //'password_confirmation' => 'required'
           ]);
-  
+
           $updatePassword = DB::table('password_resets')
                               ->where([
                                 'email' => $request->email, 
                                 'token' => $request->token
-                              ])
-                              ->first();
-  
-          if(!$updatePassword){
-              return back()->withInput()->with('error', 'Invalid token!');
-          }
-  
-          $user = User::where('email', $request->email)
-                      ->update(['password' => Hash::make($request->password)]);
- 
-          DB::table('password_resets')->where(['email'=> $request->email])->delete();
-  
-          return response()->json(['message', 'Your password has been changed!']);
-      }
+                              ])->exists();
 
+          if(!$updatePassword){
+            return response()->json([
+                'status'=> 'error',
+                'message' => 'Invalid email id or Token!']);
+          }
+        $user_id=User::select('user_id')
+                     ->where('email', '=', $request->email)->get();
+
+        DB::table('users')->where('email','=',$request->email)
+                         ->update(['password' => Hash::make($request->password)]);
+
+        DB::table('user_log_managements')->insert([
+                 'user_id' => $user_id, 
+                 'password_change_date' => Carbon::now()
+        ]);
+
+        DB::table('password_resets')->where(['email'=> $request->email])->delete();
+  
+        return response()->json([
+              'status'=> 'success',
+              'message' => 'Your password has been changed!']);
+    }
 
     //change password
-
     public function updatePassword(Request $request, $id)
      {
         # Validation

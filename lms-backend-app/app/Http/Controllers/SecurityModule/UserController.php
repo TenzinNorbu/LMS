@@ -47,7 +47,7 @@ class UserController extends Controller
             $user->phone_no = $request->phone_no;
             $user->user_id =$request->user_id;
             $user->password = Hash::make($request->password);
-
+            
             DB::table('user_log_managements')->insert([
                 'user_id' => $request->user_id, 
                 'register_date' => Carbon::now()

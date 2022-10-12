@@ -59,6 +59,13 @@ class LoginController extends Controller
 
     protected function createToken($token)
     {
+        DB::table('personal_access_tokens')->insert([
+            'tokenable'=> 'JWT',
+            'name' =>auth()->user()->user_id,
+            'token' =>$token, 
+            'abilities'=>'60 min',
+            'expires_at' => Carbon::now()
+          ]);
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
