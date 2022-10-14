@@ -62,9 +62,7 @@ class LoginController extends Controller
         DB::table('personal_access_tokens')->insert([
             'tokenable'=> 'JWT',
             'name' =>auth()->user()->user_id,
-            'token' =>$token, 
-            'abilities'=>'60 min',
-            'expires_at' => Carbon::now()
+            'token' =>$token
           ]);
         return response()->json([
             'access_token' => $token,

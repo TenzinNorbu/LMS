@@ -13,34 +13,37 @@ use Illuminate\Support\Str;
 use Auth;
 use DB;
 
+
 class ChangeAndForgotPasswordController extends Controller
 {
     //forgot password
-public function resetLinkEmail(Request $request)
+    public function resetLinkEmail(Request $request)
     {
         $request->validate([
-           'email' => 'required|email',
+            'email' => 'required|email',
         ]);
-        $user=User::where('email','=', $request->email)->exists();
-       if($user){
+        if($user=User::where('email','=', $request->email)->exists()){
         
         $token = Str::random(64);
 
         DB::table('password_resets')->insert([
             'email' => $request->email, 
-            'token' => $token, 
+            'token' => $token,
             'created_at' => Carbon::now()
           ]);
 
-        //Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
-            Mail::to(['token' => $token], function($message) use($request){
-            $message->from('tnorbu2424@gmail.com','test');
+           $details = [
+               'email'=> $request->email,
+               'url' => env('APP_URL').("/api/reset-password/$token")
+           ];
+            Mail::send('forgetPassword',$details, function($message) use($request){
+            $message->from('tnorbu2424@gmail.com','BIL LMS System');
             $message->to($request->email);
-            $message->subject('Reset Password');
+            $message->subject('Reset Your BIL LMS Account Password');
         });
         return response()->json([
             'status' => 'success',
-            'message' => 'We have e-mailed your password reset link!']);
+            'message' => 'We have e-mailed your password reset link. Please reset your password!']);
       
     }else{
 
@@ -48,29 +51,28 @@ public function resetLinkEmail(Request $request)
             'status' => 'error',
             'message' => 'Your request email not found in the list.Please check your email Id!']);
     }
-
 }
 
-    public function passwordReset(Request $request)
-      {
-          $request->validate([
+    public function passwordReset(Request $request, $token)
+    {
+        $request->validate([
               'email' => 'required|email',
-             // 'password' => 'required|string|min:6|confirmed',
               'password' => 'required',
-             //'password_confirmation' => 'required'
-          ]);
+              'password_confirmation' => 'required'
+        ]);
 
-          $updatePassword = DB::table('password_resets')
+        $updatePassword = DB::table('password_resets')
                               ->where([
                                 'email' => $request->email, 
                                 'token' => $request->token
                               ])->exists();
-
+        
           if(!$updatePassword){
             return response()->json([
                 'status'=> 'error',
-                'message' => 'Invalid email id or Token!']);
+                'message' => 'Invalid Token Id!']);
           }
+       
         $user_id=User::select('user_id')
                      ->where('email', '=', $request->email)->get();
 
