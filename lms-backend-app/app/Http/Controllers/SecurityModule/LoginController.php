@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SecurityModule;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+//use Illuminate\Http\Requests\ClientRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
@@ -12,17 +13,19 @@ use Session;
 use Carbon\Carbon; 
 use DB;
 use Auth;
+use Illuminate\Support\Facades\Crypt;
 
 
 class LoginController extends Controller
 {
-    public function authenticate(Request $request)
+    public function authenticate(Request  $request)
     {
         $request->validate([
             'user_id' => 'required|string',
             'password' => 'required|string',
         ]);
-        $user =$request->only('user_id','password');
+             
+        $user = $request->only('user_id','password');
          if (!$token = JWTAuth::attempt($user)) {
              return response()->json([
                  'status' => 'error',
