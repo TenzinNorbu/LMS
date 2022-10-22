@@ -16,7 +16,7 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $branchs=Branch::all();
+        $branchs=Branch::select('id','branch_code','branch_name')->get();
          return $this->sendResponse($branchs, 'Branch details retrieved successfully.');
 
     }

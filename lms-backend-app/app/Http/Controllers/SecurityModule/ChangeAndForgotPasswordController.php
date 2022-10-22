@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
+
 
 
 class ChangeAndForgotPasswordController extends Controller
@@ -22,8 +25,9 @@ class ChangeAndForgotPasswordController extends Controller
         $request->validate([
             'email' => 'required|email',
         ]);
-        if($user=User::where('email','=', $request->email)->exists()){
-        
+        // if($user=User::all()->where('email','=',$request->email)){
+            if($user=User::where('email','=',$request->email)->exists()){
+       
         $token = Str::random(64);
 
         DB::table('password_resets')->insert([

@@ -30,7 +30,6 @@ return new class extends Migration
             $table->string('profile_url')->default('../profile/logo.png');
             $table->string('user_id');
             $table->string('password');
-          //  $table->string('confirm_password');
             $table->string('user_status')->default('inActive');
             $table->rememberToken();
             $table->timestamps();

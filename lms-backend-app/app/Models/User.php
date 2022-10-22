@@ -14,14 +14,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
-
-
-
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-    // use HasApiTokens, HasFactory, Notifiable, HasRoles;
-
 
     /**
      * The attributes that are mass assignable.
@@ -98,7 +93,7 @@ class User extends Authenticatable implements JWTSubject
         $this->attributes['designation']=Crypt::encryptString($value);
       }
 
-    public function getEmployeeFullNameAttribute($value){
+    public static function getEmployeeFullNameAttribute($value){
       try{
         return Crypt::decryptString($value);
       }catch(\Exception $e){
@@ -119,13 +114,13 @@ class User extends Authenticatable implements JWTSubject
             return $value;    
         }
       }  
-    public function getEmailAttribute($value){
-        try{
-          return Crypt::decryptString($value);
-        }catch(\Exception $e){
-            return $value;    
-        }
-      }  
+    // public function getEmailAttribute($value){
+    //     try{
+    //       return Crypt::decryptString($value);
+    //     }catch(\Exception $e){
+    //         return $value;    
+    //     }
+    //   }  
       // public function getUserIdAttribute($value){
       //   try{
       //     return Crypt::decryptString($value);

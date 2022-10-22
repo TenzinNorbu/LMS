@@ -12,12 +12,17 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon; 
 //use Spatie\Permission\Models\Role;
 use DB;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\Encryptor;
+use Illuminate\Contracts\Encryption\Dncryptor;
 
 class UserController extends Controller
 {
     public function index()
     {
-       $users = User::all();
+       $users = User::select('id','employment_id','employee_full_name','branch_id',
+            'department_id','email','designation','phone_no')->get();
        return $this->sendResponse($users,'Users Details');
     }
 
@@ -34,8 +39,12 @@ class UserController extends Controller
             'user_id' => 'required|string',
             'password' => 'required|confirmed|min:6',
         ]);
-        
-        if(($validator->fails())) {
+        $userExists = User::where('email', '=',$request->email)->first();
+
+        if($userExists){
+            return $this->sendError('User email id is already taken.Plese use different');
+
+        }elseif($validator->fails()){
 
             $user = new User;
             $user->employee_full_name = $request->employee_full_name;
@@ -46,14 +55,13 @@ class UserController extends Controller
             $user->designation= $request->designation;
             $user->phone_no = $request->phone_no;
             $user->user_id =$request->user_id;
-            $user->password = Hash::make($request->password);
+            $user->password =Hash::make($request->password);
             
             DB::table('user_log_managements')->insert([
                 'user_id' => $request->user_id, 
                 'register_date' => Carbon::now()
               ]);
             $user->save();
-
         return $this->sendResponse($user,'User Created Successfully!',201);
         }
     }

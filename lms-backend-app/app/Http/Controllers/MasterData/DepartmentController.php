@@ -16,7 +16,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $department=Department::all();
+        $department=Department::select('id','department_code','branch_id','department_name')->get();
         return $this->sendResponse($department, 'Department details retrieved successfully.');
     }
 
