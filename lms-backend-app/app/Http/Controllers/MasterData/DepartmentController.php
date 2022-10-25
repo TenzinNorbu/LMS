@@ -4,11 +4,12 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Department;
+use App\Http\Requests\StoreDepartmentRequest;
+use App\Http\Traits\DepartmentTrait;
 
 class DepartmentController extends Controller
 {
+    use DepartmentTrait;
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +17,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $department=Department::select('id','department_code','branch_id','department_name')->get();
-        return $this->sendResponse($department, 'Department details retrieved successfully.');
+       return $this->getDepartment();
     }
 
     /**
@@ -36,24 +36,9 @@ class DepartmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreDepartmentRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'department_code' => 'required|string|between:2,100',
-            'branch_id' => 'required',
-            'department_name' => 'required|string|between:2,100',
-        ]);
-        
-        if(!($validator->fails())) {
-            $department = new Department;
-            $department->department_code = $request->department_code;
-            $department->branch_id = $request->branch_id;
-            $department->department_name = $request->department_name;
-            $department->save();
-
-            return $this->sendResponse($department,'Department Created Successfully!',201);
-
-        }
+         return $this->createDepartment($request);
     }
 
     /**
@@ -64,9 +49,7 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        $department= Department::find($id);
-        return $department ? $this->sendResponse($department, 'Department Detail Retrieved Successfully!!', 200) 
-        : $this->sendError('Department not found.');
+        return $this->showDepartment($id);
     }
 
     /**
@@ -87,23 +70,9 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreDepartmentRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'department_code' => 'required|string|between:2,100',
-            'branch_id' =>'required',
-            'department_name' => 'required|string|between:2,100',
-        ]);
-
-        $department = Department::find($id);
-        $department->department_code = $request->department_code;
-        $department->branch_id = $request->branch_id;
-        $department->department_name = $request->department_name;
-        $department->save();
-
-        return $department ? $this->sendResponse($department, 'Department Updated Successfully!!', 200) 
-        : $this->sendError('Department not found.');
-
+      return $this->updateDepartment($request, $id);
     }
 
     /**
@@ -114,9 +83,6 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        $department = Department::find($id);
-        $department->delete();
-        return $department ? $this->sendResponse($department, 'Department Deleted Successfully!!', 200) 
-        : $this->sendError('Department not found.');
+        return $this->deleteDepartment($id);
     }
 }

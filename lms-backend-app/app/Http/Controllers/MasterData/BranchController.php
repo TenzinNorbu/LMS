@@ -4,11 +4,13 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Branch;
+use App\Http\Requests\StoreBranchRequest;
+use App\Http\Traits\BranchTrait;
+
 
 class BranchController extends Controller
 {
+    use BranchTrait;
     /**
      * Display a listing of the resource.
      *
@@ -16,9 +18,7 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $branchs=Branch::select('id','branch_code','branch_name')->get();
-         return $this->sendResponse($branchs, 'Branch details retrieved successfully.');
-
+         return $this->getBranch();
     }
 
     /**
@@ -37,21 +37,9 @@ class BranchController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBranchRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'branch_code' => 'required|string|between:2,100',
-            'branch_name' => 'required|string|between:2,100',
-        ]);
-        
-        if(!($validator->fails())) {
-            $branch = new Branch;
-            $branch->branch_code = $request->branch_code;
-            $branch->branch_name = $request->branch_name;
-            $branch->save();
-
-        return $this->sendResponse($branch,'Branch Created Successfully!',201);
-        }
+         return $this->createBranch($request);
     }
 
     /**
@@ -62,9 +50,7 @@ class BranchController extends Controller
      */
     public function show($id)
     {
-        $branch= Branch::find($id);
-        return $branch ? $this->sendResponse($branch, 'Branch Detail retrieved Successfully!', 200) 
-        : $this->sendError('Branch not found.');
+        return $this->showBranch($id);
     }
 
     /**
@@ -85,20 +71,9 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreBranchRequest $request,$id)
     {
-        $validator = Validator::make($request->all(), [
-            'branch_code' => 'required|string|between:2,100',
-            'branch_name' => 'required|string|between:2,100',
-        ]);
-
-        $branch = Branch::find($id);
-        $branch->branch_code = $request->branch_code;
-        $branch->branch_name = $request->branch_name;
-        $branch->save();
-
-        return $branch ? $this->sendResponse($branch, 'Branch Updated Successfully!!', 200)
-         : $this->sendError('Branch not found.');
+        return $this->updateBranch($request,$id);
     }
 
     /**
@@ -109,9 +84,6 @@ class BranchController extends Controller
      */
     public function destroy($id)
     {
-        $branch = Branch::find($id);
-        $branch->delete();
-        return $branch ? $this->sendResponse($branch, 'Branch Delated Successfully!!', 200) 
-        : $this->sendError('Branch not found.');
+        return $this->deleteBranch($id);
     }
 }

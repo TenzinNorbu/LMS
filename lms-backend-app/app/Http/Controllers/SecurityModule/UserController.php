@@ -4,116 +4,85 @@ namespace App\Http\Controllers\SecurityModule;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Branch;
-use App\Models\Department;
-use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon; 
-//use Spatie\Permission\Models\Role;
-use DB;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Contracts\Encryption\Encryptor;
-use Illuminate\Contracts\Encryption\Dncryptor;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Traits\UserTrait;
 
 class UserController extends Controller
 {
+    use UserTrait;
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-       $users = User::select('id','employment_id','employee_full_name','branch_id',
-            'department_id','email','designation','phone_no')->get();
-       return $this->sendResponse($users,'Users Details');
+        return $this->getUser();
     }
 
-    public function store(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $validator = Validator::make($request->all(), [
-            'employee_full_name' => 'required|string',
-            'employment_id' => 'required|string',
-            'branch_id' => 'required|string',
-            'department_id' => 'required|string',
-            'designation' => 'required|string',
-            'phone_no' => 'required',
-            'email' => 'required|string|email|max:100|unique:users',
-            'user_id' => 'required|string',
-            'password' => 'required|confirmed|min:6',
-        ]);
-        $userExists = User::where('email', '=',$request->email)->first();
-
-        if($userExists){
-            return $this->sendError('User email id is already taken.Plese use different');
-
-        }elseif($validator->fails()){
-
-            $user = new User;
-            $user->employee_full_name = $request->employee_full_name;
-            $user->employment_id = $request->employment_id;
-            $user->branch_id = $request->branch_id;
-            $user->department_id = $request->department_id;
-            $user->email= $request->email;
-            $user->designation= $request->designation;
-            $user->phone_no = $request->phone_no;
-            $user->user_id =$request->user_id;
-            $user->password =Hash::make($request->password);
-            
-            DB::table('user_log_managements')->insert([
-                'user_id' => $request->user_id, 
-                'register_date' => Carbon::now()
-              ]);
-            $user->save();
-        return $this->sendResponse($user,'User Created Successfully!',201);
-        }
+        //
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreUserRequest $request)
+    {
+        return $this->register($request);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
-        $user = User::find($id);
-        return $user ? $this->sendResponse($user, 'User Detail retrieved Successfully!', 200) 
-        : $this->sendError('User not found.');
+        return $this->showUser($id);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
-        $validator = Validator::make($request->all(), [
-            'employee_full_name' => 'required|string',
-            'employment_id' => 'required|string',
-            'branch_id' => 'required|string',
-            'department_id' => 'required|string',
-            'phone_no' => 'required|string',
-            'designation' => 'required|string',
-            'user_id' => 'required|string',
-            'email' => 'required|string',
-            'user_status' => 'required|string',
-        ]);
-
-        $user = User::find($id);
-        $user->employee_full_name = $request->employee_full_name;
-        $user->employment_id = $request->employment_id;
-        $user->branch_id = $request->branch_id;
-        $user->department_id = $request->department_id;
-        $user->phone_no = $request->phone_no;
-        $user->designation = $request->designation;
-        $user->user_id = $request->user_id;
-        $user->email = $request->email;
-        $user->user_status = $request->user_status;
-
-        // DB::table('model_has_roles')->where('model_id',$id)->delete();
-        // $user->assignRole($request->input('roles'));
-        $user->save();
-
-        return $user ? $this->sendResponse($user, 'User updated Successfully!', 200) 
-        : $this->sendError('User not found.');
-
+        //
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(StoreUserRequest $request, $id)
+    {
+        return $this->updateUser($request, $id);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
-        $user = User::find($id);
-        $user->delete();
-        return $branch ? $this->sendResponse($branch, 'User deleted Successfully!', 200) 
-        : $this->sendError('User not found.');
+        return $this->deleteUser($id);
     }
-
-    
 }

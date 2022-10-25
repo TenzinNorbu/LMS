@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SecurityModule\LoginController;
+use App\Http\Controllers\SecurityModule\LoginLogoutController;
 use App\Http\Controllers\SecurityModule\RoleController;
 use App\Http\Controllers\SecurityModule\UserController;
 use App\Http\Controllers\SecurityModule\ProfileController;
@@ -27,8 +27,8 @@ use App\Http\Controllers\ApplicantModule\LoanDetailController;
 //     return $request->user();
 // });
 
-Route::post('/login', [LoginController::class, 'authenticate']);
-Route::post('/user-registration', [UserController::class, 'store']);
+Route::post('/login', [LoginLogoutController::class, 'authenticate']);
+Route::post('/register', [UserController::class, 'store']);
 Route::post('/forgot-password', [ChangeAndForgotPasswordController::class, 'resetLinkEmail']);
 Route::post('/reset-password/{token}', [ChangeAndForgotPasswordController::class, 'passwordReset']);
 
@@ -37,12 +37,14 @@ Route::group([
     'middleware' => 'jwt.verify',
     'prefix' => 'auth'
 ], function ($router) { 
-    Route::get('/user-lists', [UserController::class, 'index']);
-    Route::get('/user-show/{id}', [UserController::class, 'show']);
-    Route::post('/user-update/{id}', [UserController::class, 'update']);
-    Route::post('/user-delete/{id}', [UserController::class, 'destroy']);
+    Route::resource('user', UserController::class);
+
+    // Route::get('/user-lists', [UserController::class, 'index']);
+    // Route::get('/user-show/{id}', [UserController::class, 'show']);
+    // Route::post('/user-update/{id}', [UserController::class, 'update']);
+    // Route::post('/user-delete/{id}', [UserController::class, 'destroy']);
     Route::post('/refresh-token', [LoginController::class, 'refreshToken']);
-    Route::post('/logout', [LoginController::class, 'logout']);
+    Route::post('/logout', [LoginLogoutController::class, 'logout']);
 
 //role
     Route::post('/role-create', [RoleController::class, 'store']);
@@ -56,26 +58,14 @@ Route::group([
 
 Route::group([
     'middleware' => 'jwt.verify',
-    'prefix' => 'branch'
+    'prefix' => 'master-data'
 ], function ($router) {
-    Route::post('/create', [BranchController::class, 'store']);
-    Route::get('/lists', [BranchController::class, 'index']);
-    Route::get('/show/{id}', [BranchController::class, 'show']);
-    Route::post('/update/{id}', [BranchController::class, 'update']);
-    Route::post('/delete/{id}', [BranchController::class, 'destroy']);
-
+    Route::resource('branch', BranchController::class);
+    Route::resource('department', DepartmentController::class);
 });
-Route::group([
-    'middleware' => 'jwt.verify',
-    'prefix' => 'department'
-], function ($router) {
-    Route::post('/create', [DepartmentController::class, 'store']);
-    Route::get('/lists', [DepartmentController::class, 'index']);
-    Route::get('/show/{id}', [DepartmentController::class, 'show']);
-    Route::post('/update/{id}', [DepartmentController::class, 'update']);
-    Route::post('/delete/{id}', [DepartmentController::class, 'destroy']);
 
-});
+
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'profile'
