@@ -6,6 +6,7 @@ use App\Http\Controllers\SecurityModule\LoginLogoutController;
 use App\Http\Controllers\SecurityModule\RoleController;
 use App\Http\Controllers\SecurityModule\UserController;
 use App\Http\Controllers\SecurityModule\ProfileController;
+use App\Http\Controllers\SecurityModule\ChangeForgotPasswordController;
 use App\Http\Controllers\SecurityModule\ChangeAndForgotPasswordController;
 use App\Http\Controllers\MasterData\BranchController;
 use App\Http\Controllers\MasterData\DepartmentController;
@@ -29,8 +30,8 @@ use App\Http\Controllers\ApplicantModule\LoanDetailController;
 
 Route::post('/login', [LoginLogoutController::class, 'authenticate']);
 Route::post('/register', [UserController::class, 'store']);
-Route::post('/forgot-password', [ChangeAndForgotPasswordController::class, 'resetLinkEmail']);
-Route::post('/reset-password/{token}', [ChangeAndForgotPasswordController::class, 'passwordReset']);
+Route::post('/forgot-password', [ChangeForgotPasswordController::class, 'resetEmailLink']);
+Route::post('/reset-password/{token}', [ChangeForgotPasswordController::class, 'passwordResetLink']);
 
 
 Route::group([

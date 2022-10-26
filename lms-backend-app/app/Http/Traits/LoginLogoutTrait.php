@@ -12,7 +12,7 @@ trait LoginLogoutTrait {
 
     public function login($request) {
         $user=$request->only('user_id','password');
-
+        
         if (!$token=JWTAuth::attempt($user)) {
             return response()->json([
                 'status' => 'error',
@@ -29,7 +29,6 @@ trait LoginLogoutTrait {
 
     public function userLogout()
     {
-        //return "test";
         $currentUser=auth()->user()->user_id;
         Session::flush();
         auth()->logout();

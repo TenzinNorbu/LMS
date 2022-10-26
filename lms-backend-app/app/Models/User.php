@@ -6,17 +6,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+// use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 //use App\Traits\UUID;
 use Spatie\Permission\Traits\HasRoles;
+use ESolution\DBEncryption\Traits\EncryptedAttribute;
 
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
+
+// use Illuminate\Support\Facades\Crypt;
+// use Illuminate\Contracts\Encryption\DecryptException;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, EncryptedAttribute;
 
     /**
      * The attributes that are mass assignable.
@@ -67,86 +69,94 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims() {
         return [];
     }  
-    
-    public function setEmployeeFullNameAttribute($value){
-      $this->attributes['employee_full_name']=Crypt::encryptString($value);
+    public function setPasswordAttribute($password)
+    {   
+        $this->attributes['password'] = hash($password);
     }
-    public function setEmploymentIdAttribute($value){
-        $this->attributes['employment_id']=Crypt::encryptString($value);
-      }
-    public function setPhoneNoAttribute($value){
-        $this->attributes['phone_no']=Crypt::encryptString($value);
-      }
-    // public function setEmailAttribute($value){
-    //     $this->attributes['email']=Crypt::encryptString($value);
-    //   }
-    public function setDepartmentIdAttribute($value){
-        $this->attributes['department_id']=Crypt::encryptString($value);
-      }
-    public function setBranchIdAttribute($value){
-        $this->attributes['branch_id']=Crypt::encryptString($value);
-      }
-    // public function setUserIdAttribute($value){
-    //     $this->attributes['user_id']=Crypt::encryptString($value);
-    //   }
-    public function setDesignationAttribute($value){
-        $this->attributes['designation']=Crypt::encryptString($value);
-      }
+    protected $encryptable = [
+      'employee_full_name','employment_id','branch_id','department_id',
+        'designation','phone_no',
+    ];
 
-    public static function getEmployeeFullNameAttribute($value){
-      try{
-        return Crypt::decryptString($value);
-      }catch(\Exception $e){
-          return $value;    
-      }
-    }  
-    public function getEmploymentIdAttribute($value){
-        try{
-          return Crypt::decryptString($value);
-        }catch(\Exception $e){
-            return $value;    
-        }
-      }  
-    public function getPhoneNoAttribute($value){
-        try{
-          return Crypt::decryptString($value);
-        }catch(\Exception $e){
-            return $value;    
-        }
-      }  
-    // public function getEmailAttribute($value){
+    // public function setEmployeeFullNameAttribute($value){
+    //   $this->attributes['employee_full_name']=Crypt::encryptString($value);
+    // }
+    // public function setEmploymentIdAttribute($value){
+    //     $this->attributes['employment_id']=Crypt::encryptString($value);
+    //   }
+    // public function setPhoneNoAttribute($value){
+    //     $this->attributes['phone_no']=Crypt::encryptString($value);
+    //   }
+    // // public function setEmailAttribute($value){
+    // //     $this->attributes['email']=Crypt::encryptString($value);
+    // //   }
+    // public function setDepartmentIdAttribute($value){
+    //     $this->attributes['department_id']=Crypt::encryptString($value);
+    //   }
+    // public function setBranchIdAttribute($value){
+    //     $this->attributes['branch_id']=Crypt::encryptString($value);
+    //   }
+    // // public function setUserIdAttribute($value){
+    // //     $this->attributes['user_id']=Crypt::encryptString($value);
+    // //   }
+    // public function setDesignationAttribute($value){
+    //     $this->attributes['designation']=Crypt::encryptString($value);
+    //   }
+
+    // public static function getEmployeeFullNameAttribute($value){
+    //   try{
+    //     return Crypt::decryptString($value);
+    //   }catch(\Exception $e){
+    //       return $value;    
+    //   }
+    // }  
+    // public function getEmploymentIdAttribute($value){
     //     try{
     //       return Crypt::decryptString($value);
     //     }catch(\Exception $e){
     //         return $value;    
     //     }
     //   }  
-      // public function getUserIdAttribute($value){
-      //   try{
-      //     return Crypt::decryptString($value);
-      //   }catch(\Exception $e){
-      //       return $value;    
-      //   }
-      // }  
-    public function getDesignationAttribute($value){
-        try{
-          return Crypt::decryptString($value);
-        }catch(\Exception $e){
-            return $value;    
-        }
-      }  
-    public function getBranchIdAttribute($value){
-        try{
-          return Crypt::decryptString($value);
-        }catch(\Exception $e){
-            return $value;    
-        }
-      }  
-      public function getDepartmentIdAttribute($value){
-        try{
-          return Crypt::decryptString($value);
-        }catch(\Exception $e){
-            return $value;    
-        }
-      }  
+    // public function getPhoneNoAttribute($value){
+    //     try{
+    //       return Crypt::decryptString($value);
+    //     }catch(\Exception $e){
+    //         return $value;    
+    //     }
+    //   }  
+    // // public function getEmailAttribute($value){
+    // //     try{
+    // //       return Crypt::decryptString($value);
+    // //     }catch(\Exception $e){
+    // //         return $value;    
+    // //     }
+    // //   }  
+    //   // public function getUserIdAttribute($value){
+    //   //   try{
+    //   //     return Crypt::decryptString($value);
+    //   //   }catch(\Exception $e){
+    //   //       return $value;    
+    //   //   }
+    //   // }  
+    // public function getDesignationAttribute($value){
+    //     try{
+    //       return Crypt::decryptString($value);
+    //     }catch(\Exception $e){
+    //         return $value;    
+    //     }
+    //   }  
+    // public function getBranchIdAttribute($value){
+    //     try{
+    //       return Crypt::decryptString($value);
+    //     }catch(\Exception $e){
+    //         return $value;    
+    //     }
+    //   }  
+    //   public function getDepartmentIdAttribute($value){
+    //     try{
+    //       return Crypt::decryptString($value);
+    //     }catch(\Exception $e){
+    //         return $value;    
+    //     }
+    //   }  
 }
