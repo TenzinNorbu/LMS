@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\MasterData;
+namespace App\Http\Controllers\UserManagementModule;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\MasterData\StoreBranchRequest;
-use App\Http\Traits\MasterData\BranchTrait;
+use App\Http\Requests\UserManagement\StoreUserRequest;
+use App\Http\Traits\UserManagement\UserTrait;
 
-
-class BranchController extends Controller
+class UserController extends Controller
 {
-    use BranchTrait;
+    use UserTrait;
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +17,7 @@ class BranchController extends Controller
      */
     public function index()
     {
-         return $this->getBranch();
+        return $this->getUser();
     }
 
     /**
@@ -37,9 +36,9 @@ class BranchController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreBranchRequest $request)
+    public function store(StoreUserRequest $request)
     {
-         return $this->createBranch($request);
+        return $this->register($request);
     }
 
     /**
@@ -50,7 +49,7 @@ class BranchController extends Controller
      */
     public function show($id)
     {
-        return $this->showBranch($id);
+        return $this->showUser($id);
     }
 
     /**
@@ -71,9 +70,9 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreBranchRequest $request,$id)
+    public function update(StoreUserRequest $request, $id)
     {
-        return $this->updateBranch($request,$id);
+        return $this->updateUser($request, $id);
     }
 
     /**
@@ -84,6 +83,6 @@ class BranchController extends Controller
      */
     public function destroy($id)
     {
-        return $this->deleteBranch($id);
+        return $this->deleteUser($id);
     }
 }

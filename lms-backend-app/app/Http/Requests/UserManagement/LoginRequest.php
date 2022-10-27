@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\UserManagement;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBranchRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class StoreBranchRequest extends FormRequest
     public function rules()
     {
         return [
-            'branch_code' => ['required','string', 'max:20'],
-            'branch_name'  => ['required','string','max:100']
+            'user_id' => ['required','string'],
+            'password' => ['required','string'],
         ];
     }
 }

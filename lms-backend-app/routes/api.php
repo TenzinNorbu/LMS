@@ -2,12 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SecurityModule\LoginLogoutController;
-use App\Http\Controllers\SecurityModule\RoleController;
-use App\Http\Controllers\SecurityModule\UserController;
-use App\Http\Controllers\SecurityModule\ProfileController;
-use App\Http\Controllers\SecurityModule\ChangeForgotPasswordController;
-use App\Http\Controllers\SecurityModule\ChangeAndForgotPasswordController;
+use App\Http\Controllers\UserManagementModule\LoginLogoutController;
+use App\Http\Controllers\UserManagementModule\UserController;
+use App\Http\Controllers\UserManagementModule\RoleController;
+use App\Http\Controllers\UserManagementModule\PermissionController;
+use App\Http\Controllers\UserManagementModule\ProfileController;
+use App\Http\Controllers\UserManagementModule\ChangeForgotPasswordController;
 use App\Http\Controllers\MasterData\BranchController;
 use App\Http\Controllers\MasterData\DepartmentController;
 use App\Http\Controllers\ApplicantModule\ApplicantInfoController;
@@ -38,23 +38,21 @@ Route::group([
     'middleware' => 'jwt.verify',
     'prefix' => 'auth'
 ], function ($router) { 
+//user
     Route::resource('user', UserController::class);
-
-    // Route::get('/user-lists', [UserController::class, 'index']);
-    // Route::get('/user-show/{id}', [UserController::class, 'show']);
-    // Route::post('/user-update/{id}', [UserController::class, 'update']);
-    // Route::post('/user-delete/{id}', [UserController::class, 'destroy']);
-    Route::post('/refresh-token', [LoginController::class, 'refreshToken']);
+    Route::post('/refresh-token', [LoginLogoutController::class, 'refreshToken']);
     Route::post('/logout', [LoginLogoutController::class, 'logout']);
+    Route::post('/change-password/{id}', [ChangeForgotPasswordController::class, 'changePassword']);
+//role & permission
+    Route::resource('role', RoleController::class);
+    Route::resource('permission', PermissionController::class);
 
-//role
-    Route::post('/role-create', [RoleController::class, 'store']);
-    Route::get('/role-lists', [RoleController::class, 'index']);
-    Route::get('/role-show/{id}', [RoleController::class, 'show']);
-    Route::post('/role-update/{id}', [RoleController::class, 'update']);
-    Route::post('/role-delete/{id}', [RoleController::class, 'destroy']);  
+    // Route::post('/role-create', [RoleController::class, 'store']);
+    // Route::get('/role-lists', [RoleController::class, 'index']);
+    // Route::get('/role-show/{id}', [RoleController::class, 'show']);
+    // Route::post('/role-update/{id}', [RoleController::class, 'update']);
+    // Route::post('/role-delete/{id}', [RoleController::class, 'destroy']);  
     
-    Route::post('/change-password/{id}', [ChangeAndForgotPasswordController::class, 'updatePassword']);
 });
 
 Route::group([

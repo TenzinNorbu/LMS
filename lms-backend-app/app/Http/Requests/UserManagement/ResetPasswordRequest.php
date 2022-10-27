@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\UserManagement;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDepartmentRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class StoreDepartmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'department_code' => ['required','string','max:20'],
-            'branch_id' =>['required'],
-            'department_name' => ['required','string','max:100']
+            'email' => ['required','string','email'],
+            'password' => ['required','confirmed','min:6'],
         ];
     }
 }

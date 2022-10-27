@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Traits;
+namespace App\Http\Traits\UserManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-//use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Role;
 use DB;
 use Session;
 use Carbon\Carbon;
@@ -13,7 +13,7 @@ trait UserTrait {
 
     public function getUser() {
         $users = User::all();
-        return $users ? $this->sendResponse($users, 'User Detail retrieved Successfully!') 
+        return $users ? $this->sendResponse($users, 'User Detail retrieved Successfully!',200) 
         : $this->sendError('User not found');
     }
     public function register($request)
@@ -24,14 +24,14 @@ trait UserTrait {
             'register_date' => Carbon::now()
         ]);
     
-        return $user ? $this->sendResponse($user, 'User created Successfully!') 
+        return $user ? $this->sendResponse($user, 'User created Successfully!',201) 
         : $this->sendError('User creation error');
     }
 
     public function showUser($id)
     {
         $user= User::find($id);
-        return $user ? $this->sendResponse($user, 'User Detail retrieved Successfully!') 
+        return $user ? $this->sendResponse($user, 'User Detail retrieved Successfully!',200) 
         : $this->sendError('User not found');
     }
 
@@ -48,8 +48,9 @@ trait UserTrait {
         $user->email = $request->email;
         $user->user_status = $request->user_status;
 
-        // DB::table('model_has_roles')->where('model_id',$id)->delete();
-        // $user->assignRole($request->input('roles'));
+        DB::table('model_has_roles')->where('model_id',$id)->delete();
+        $user->assignRole($request->input('roles'));
+
         $user->save();
         return $user ? $this->sendResponse($user,'User Updated Successfully!!', 200)
          : $this->sendError('User not able to update.');
@@ -58,7 +59,7 @@ trait UserTrait {
     public function deleteUser($id)
     { 
         $user = User::find($id)->delete();
-        return $user ? $this->sendResponse($user, 'User Deleted Successfully!!') 
+        return $user ? $this->sendResponse($user, 'User Deleted Successfully!!',200) 
         : $this->sendError('User not found');
     }
 }

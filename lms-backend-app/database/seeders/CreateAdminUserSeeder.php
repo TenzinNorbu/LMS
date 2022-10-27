@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Crypt;
+// use Illuminate\Support\Facades\Crypt;
 
 
 
@@ -27,10 +27,9 @@ class CreateAdminUserSeeder extends Seeder
             'branch_id' =>'1',
             'department_id'=>'3',
             'designation'=>'PMU',
-            'email_id' => 'lms-admin@gmail.com',
-            'user_id' => 'LMS_ADMIN',
-            'password' => bcrypt('lms@1234'),
-            'confirm_password' => bcrypt('lms@1234')
+            'email' => 'biladmin@gmail.com',
+            'user_id' => 'lms-admin',
+            'password' => 'lms@1234'
         ]);
       
         $role = Role::create(['name' => 'Super Admin']);

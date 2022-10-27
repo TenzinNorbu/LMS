@@ -71,7 +71,7 @@ class User extends Authenticatable implements JWTSubject
     }  
     public function setPasswordAttribute($password)
     {   
-        $this->attributes['password'] = hash($password);
+        $this->attributes['password'] = bcrypt($password);
     }
     protected $encryptable = [
       'employee_full_name','employment_id','branch_id','department_id',

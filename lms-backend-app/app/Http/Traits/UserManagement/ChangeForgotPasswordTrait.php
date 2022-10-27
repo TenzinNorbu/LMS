@@ -1,35 +1,21 @@
 <?php
-
-namespace App\Http\Controllers\SecurityModule;
-
-use App\Http\Controllers\Controller;
+namespace App\Http\Traits\UserManagement;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon; 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Auth;
 use DB;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Contracts\Encryption\DecryptException;
 
 
+trait ChangeForgotPasswordTrait{
 
-class ChangeAndForgotPasswordController extends Controller
-{
-    //forgot password
-    public function resetLinkEmail(Request $request)
+    public function resetLinkEmail($request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-        // if($user=User::all()->where('email','=',$request->email)){
-            if($user=User::where('email','=',$request->email)->exists()){
-       
+        if($user=User::where('email','=',$request->email)->exists()){
         $token = Str::random(64);
-
         DB::table('password_resets')->insert([
             'email' => $request->email, 
             'token' => $token,
@@ -50,21 +36,14 @@ class ChangeAndForgotPasswordController extends Controller
             'message' => 'We have e-mailed your password reset link. Please reset your password!']);
       
     }else{
-
         return response()->json([
             'status' => 'error',
             'message' => 'Your request email not found in the list.Please check your email Id!']);
     }
 }
 
-    public function passwordReset(Request $request, $token)
+    public function passwordReset($request, $token)
     {
-        $request->validate([
-              'email' => 'required|email',
-              'password' => 'required',
-              'password_confirmation' => 'required'
-        ]);
-
         $updatePassword = DB::table('password_resets')
                               ->where([
                                 'email' => $request->email, 
@@ -95,17 +74,11 @@ class ChangeAndForgotPasswordController extends Controller
               'message' => 'Your password has been changed!']);
     }
 
-    //change password
-    public function updatePassword(Request $request, $id)
+    public function updatePassword($request, $id)
      {
-        # Validation
-        $validator = Validator::make($request->all(),[
-            'old_password' => 'required',
-            'new_password' => 'required|confirmed',
-        ]);
         // #Match The Old Password
         if(!Hash::check($request->old_password, auth()->user()->password)){
-        return $this->sendError('Old Password Doesnt Match.');
+        return $this->sendError('Old password doesnot match.');
         }
         #Update the new Password
         $user = User::find($id);
@@ -116,7 +89,8 @@ class ChangeAndForgotPasswordController extends Controller
             'password_change_date' => Carbon::now()
           ]);
         $user->save();
-        return $this->sendResponse($user,'Password changed successfully.');
+        return response()->json([
+            'status'=> 'success',
+            'message' => 'Your password changed successfully']);
     }
-
 }

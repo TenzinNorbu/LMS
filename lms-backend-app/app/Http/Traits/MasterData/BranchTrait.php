@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Traits;
+namespace App\Http\Traits\MasterData;
 use Illuminate\Http\Request;
 use App\Models\Branch;
 

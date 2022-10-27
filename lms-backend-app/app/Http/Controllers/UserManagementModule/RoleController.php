@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\SecurityModule;
+namespace App\Http\Controllers\UserManagementModule;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Traits\UserTrait;
+use App\Http\Requests\UserManagement\StoreRoleRequest;
+use App\Http\Traits\UserManagement\RoleTrait;
 
-class UserController extends Controller
+
+class RoleController extends Controller
 {
-    use UserTrait;
+    use RoleTrait;
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->getUser();
+        return $this->getRole();
     }
 
     /**
@@ -36,9 +37,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreRoleRequest $request)
     {
-        return $this->register($request);
+        return $this->createRole($request);
     }
 
     /**
@@ -49,7 +50,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return $this->showUser($id);
+        return $this->showRole($id);
     }
 
     /**
@@ -60,7 +61,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -70,9 +71,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreUserRequest $request, $id)
+    public function update(StoreRoleRequest $request, $id)
     {
-        return $this->updateUser($request, $id);
+        return $this->updateRole($request, $id);
     }
 
     /**
@@ -83,6 +84,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        return $this->deleteUser($id);
+        return $this->deleteRole($id);
     }
 }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreDepartmentRequest;
-use App\Http\Traits\DepartmentTrait;
+use App\Http\Requests\MasterData\StoreDepartmentRequest;
+use App\Http\Traits\MasterData\DepartmentTrait;
 
 class DepartmentController extends Controller
 {
