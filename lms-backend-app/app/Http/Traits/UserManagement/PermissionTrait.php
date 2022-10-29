@@ -12,7 +12,7 @@ trait PermissionTrait{
     }
 
     public function createPermission(Request $request){
-        $permission = Permission::create(['permission' => $request->input('permission')]);
+        $permission = Permission::create($request->all());
         return $permission ? $this->sendResponse($permission, 'Permission created Successfully!',201) 
         : $this->sendError('Permission creation error');
     }
@@ -25,7 +25,7 @@ trait PermissionTrait{
 
     public function updatePermission(Request $id){
         $permission = Permission::find($id);
-        $permission->permission = $request->input('permission');
+        $permission->name = $request->input('name');
         $permission->save();
     
         return $permission ? $this->sendResponse($permission, 'Permission Updated Successfully!!', 200)

@@ -3,13 +3,21 @@
 namespace App\Http\Controllers\UserManagementModule;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreUserRequest;
-use App\Http\Traits\UserManagement\UserTrait;
+
 
 class UserController extends Controller
 {
-    use UserTrait;
+    private $userRepository,$userService;
+
+    public function __construct(UserService $userService, UserRepository $userRepository) 
+    {
+        $this->userService = $userService;
+        $this->userRepository=$userRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +25,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->getUser();
+        $users=$this->userRepository->getAllUsers();
+        return $users ? $this->sendResponse($users, 'User Detail retrieved Successfully!',200) 
+        : $this->sendError('User not found');
     }
 
     /**
@@ -36,9 +46,11 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $userDetails)
     {
-        return $this->register($request);
+        $user= $this->userRepository->register($userDetails);
+        return $user ? $this->sendResponse($user, 'User Submitted Successfully!',200) 
+        : $this->sendError('User not found');
     }
 
     /**
@@ -47,9 +59,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($userId)
     {
-        return $this->showUser($id);
+        $user= $this->userRepository->getUserById($userId);
+        return $user ? $this->sendResponse($user, 'User Retrived Successfully!',200) 
+        : $this->sendError('User not found');
     }
 
     /**
@@ -70,9 +84,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreUserRequest $request, $id)
+    public function update(Request $userDetails, $userId)
     {
-        return $this->updateUser($request, $id);
+         $user= $this->userService->updateUser($userDetails, $userId);
+         return $user ? $this->sendResponse($user, 'User Updated Successfully!!',200) 
+         : $this->sendError('User not found');
     }
 
     /**
@@ -81,8 +97,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($userId)
     {
-        return $this->deleteUser($id);
+        $user=$this->userRepository->deleteUser($userId);
+        return $user ? $this->sendResponse($user, 'User Deleted Successfully!!',200) 
+        : $this->sendError('User not found');
+
     }
 }

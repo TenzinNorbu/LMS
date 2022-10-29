@@ -11,11 +11,10 @@ trait RoleTrait{
        $roles=Role::all();
        return $roles ? $this->sendResponse($roles, 'Role Details!',200) 
        : $this->sendError('Role not found');
-
     }
 
     public function createRole(Request $request){
-        $role = Role::create(['name' => $request->input('name')]);
+        $role=Role::create($request->all());
         $role->syncPermissions($request->input('permission'));
         return $role ? $this->sendResponse($role, 'Role created Successfully!',201) 
         : $this->sendError('Role creation error');
@@ -46,5 +45,4 @@ trait RoleTrait{
         return $role ? $this->sendResponse($role, 'Role Delete Successfully!!', 200)
         : $this->sendError('Role not found.');
     }
-
 }
