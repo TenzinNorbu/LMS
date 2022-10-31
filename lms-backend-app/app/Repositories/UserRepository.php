@@ -24,21 +24,19 @@ class UserRepository{
         return User::find($userId);
     }
 
-    public function updateUser($userDetails, $userId){
-        return User::whereId($userId)->update($UserDetails);
+    public function updateUser($userId, $userDetails){
 
-        
-    // $user = User::find($id);
-    // $user->employee_full_name = $request->employee_full_name;
-    // $user->employment_id = $request->employment_id;
-    // $user->branch_id = $request->branch_id;
-    // $user->department_id = $request->department_id;
-    // $user->phone_no = $request->phone_no;
-    // $user->designation = $request->designation;
-    // $user->user_id = $request->user_id;
-    // $user->email = $request->email;
-    // $user->user_status = $request->user_status;
-    // $user->save();
+        $user = User::find($userId);
+        $user->employment_id = $userDetails->employment_id;
+        $user->branch_id = $userDetails->branch_id;
+        $user->department_id = $userDetails->department_id;
+        $user->phone_no = $userDetails->phone_no;
+        $user->designation = $userDetails->designation;
+        $user->user_id = $userDetails->user_id;
+        $user->email = $userDetails->email;
+        $user->user_status = $userDetails->user_status;
+        $user->save();
+        return $user;
     }
     public function deleteUser($userId){
         return User::destroy($userId);

@@ -7,25 +7,29 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\ForgotPasswordRequest;
 use App\Http\Requests\UserManagement\ResetPasswordRequest;
 use App\Http\Requests\UserManagement\ChangePasswordRequest;
-use App\Http\Traits\UserManagement\ChangeForgotPasswordTrait;
+use App\Services\ChangeForgotPasswordService;
 
 
 class ChangeForgotPasswordController extends Controller
 {
-    use ChangeForgotPasswordTrait;
+    private $changeForgotPasswordService;
+
+    public function __construct(ChangeForgotPasswordService $changeForgotPasswordService){
+        $this->changeForgotPasswordService= $changeForgotPasswordService;
+    }
 
     public function resetEmailLink(ForgotPasswordRequest $request)
     {
-        return $this->resetLinkEmail($request);
+        return $this->changeForgotPasswordService->resetLink($request);
     }
 
     public function passwordResetLink(ResetPasswordRequest $request, $token)
     {
-        return $this->passwordReset($request, $token);
+        return $this->changeForgotPasswordService->reset($request, $token);
     }
 
     public function changePassword(ChangePasswordRequest $request, $id)
      {
-         return $this->updatePassword($request, $id);
+         return $this->changeForgotPasswordService->updatePassword($request, $id);
      }
 }

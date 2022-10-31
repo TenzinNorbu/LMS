@@ -17,11 +17,7 @@ class UserService{
         $this->userRepository = $userRepository;
     }
 
-    // public function createUser(StoreUserRequest $userDetails){
-    //     return $this->userRepository->register($userDetails); 
-    // }
-
-    public function updateUser(Request $userDetails, $userId){
+    public function userUpdate(Request $userDetails, $userId){
         $validator = Validator::make($userDetails->all(), [
             'employment_id' => 'required|string',
             'branch_id' => 'required|string',
@@ -32,6 +28,6 @@ class UserService{
             'email' => 'required|string',
             'user_status' => 'required|string',
         ]);
-        return $this->userRepository->userUpdate($userDetails, $userId);
+        return $this->userRepository->updateUser($userId,$userDetails);
     }
 }

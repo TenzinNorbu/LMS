@@ -84,9 +84,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $userDetails, $userId)
+    public function update(Request $userId, $userDetails)
     {
-         $user= $this->userService->updateUser($userDetails, $userId);
+         $user= $this->userService->userUpdate($userId, $userDetails);
          return $user ? $this->sendResponse($user, 'User Updated Successfully!!',200) 
          : $this->sendError('User not found');
     }
