@@ -15,7 +15,7 @@ class LoginLogoutService {
         
         $user=$request->only('user_id','password');
         
-        if (!$token=JWTAuth::attempt($user)) {
+        if(!$token=JWTAuth::attempt($user)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid Credentials or User not found'

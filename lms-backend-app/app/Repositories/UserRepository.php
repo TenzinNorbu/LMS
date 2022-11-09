@@ -4,10 +4,22 @@ namespace App\Repositories;
 use App\Models\User;
 use DB;
 use Carbon\Carbon;
+use ESolution\DBEncryption\Encrypter;
+
 
 class UserRepository{
     public function getAllUsers(){
-        return User::all();
+        $data = DB::table('users')->select('employee_full_name', 'branch_id','user_id')->get();
+        // return $data;
+        $data->transform(function($user) {
+            $user->employee_full_name = Encrypter::decrypt($user->employee_full_name);
+            $user->branch_id = Encrypter::decrypt($user->branch_id);
+            // $user->phone = Encrypter::decrypt($user->phone);
+            // $user->user_name;
+            return  $user;
+        });
+        return $data;
+        // return User::all();
     }
 
     public function register($userDetails){

@@ -5,20 +5,27 @@ namespace App\Http\Controllers\UserManagementModule;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreRoleRequest;
-use App\Http\Traits\UserManagement\RoleTrait;
+use App\Services\RoleService;
+use App\Repositories\RoleRepository;
 
 
 class RoleController extends Controller
 {
-    use RoleTrait;
+    private $roleRepository, $roleService;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    public function  __construct(RoleRepository $roleRepository, RoleService $roleService){
+        $this->roleRepository=$roleRepository;
+        $this->roleService=$roleService;
+    }
     public function index()
     {
-        return $this->getRole();
+        $roles= $this->roleRepository->getRole();
+        return $roles ? $this->sendResponse($roles, 'Role Details!',200) 
+        : $this->sendError('Role not found');
     }
 
     /**
@@ -39,7 +46,9 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        return $this->createRole($request);
+        $role = $this->roleRepository->createRole($request);
+        return $role ? $this->sendResponse($role, 'Role created Successfully!',201) 
+        : $this->sendError('Role creation error');
     }
 
     /**
@@ -48,9 +57,11 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($roleId)
     {
-        return $this->showRole($id);
+        $rolePermissions=$this->roleRepository->showRole($roleId);
+        return $rolePermissions ? $this->sendResponse($rolePermissions, 'Role Detail retrieved Successfully!', 200) 
+            : $this->sendError('Role not found.');
     }
 
     /**
@@ -71,9 +82,11 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreRoleRequest $request, $id)
+    public function update(StoreRoleRequest $request, $roleId)
     {
-        return $this->updateRole($request, $id);
+        $role =$this->roleRepository->updateRole($request, $roleId);
+        return $role ? $this->sendResponse($role, 'Role Updated Successfully!!', 200)
+        : $this->sendError('Role not able to update.');
     }
 
     /**
@@ -82,8 +95,10 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($roleId)
     {
-        return $this->deleteRole($id);
+        $role = $this->roleRepository->deleteRole($roleId);
+        return $role ? $this->sendResponse($role, 'Role Delete Successfully!!', 200)
+        : $this->sendError('Role not found.');
     }
 }

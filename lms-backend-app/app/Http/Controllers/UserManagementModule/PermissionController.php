@@ -38,7 +38,6 @@ class PermissionController extends Controller
      */
     public function store(StorePermissionRequest $request)
     {
-        // return "test";
         return $this->createPermission($request);
     }
 

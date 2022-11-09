@@ -11,10 +11,13 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use ESolution\DBEncryption\Traits\EncryptedAttribute;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable implements JWTSubject
+
+class User extends Authenticatable implements JWTSubject,Auditable
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, EncryptedAttribute;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, EncryptedAttribute,\OwenIt\Auditing\Auditable
+    ;
 
     /**
      * The attributes that are mass assignable.

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Repositories\UserRepository;
 use App\Models\User;
-use App\Http\Requests\UserManagement\StoreUserRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
