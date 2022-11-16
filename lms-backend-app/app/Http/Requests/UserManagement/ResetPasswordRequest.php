@@ -28,4 +28,10 @@ class ResetPasswordRequest extends FormRequest
             'password' => ['required','confirmed','min:6'],
         ];
     }
+    public function messages()
+    {
+        return [
+            'email.required' => 'Email is required!',
+            'password.required' => 'Password id required!
+        ];
 }

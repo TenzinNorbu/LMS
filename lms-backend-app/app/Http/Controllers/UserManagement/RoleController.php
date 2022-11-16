@@ -1,29 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\UserManagementModule;
+namespace App\Http\Controllers\UserManagement;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreRoleRequest;
-use App\Services\RoleService;
-use App\Repositories\RoleRepository;
+use App\Services\UserManagement\RoleService;
 
 
 class RoleController extends Controller
 {
-    private $roleRepository, $roleService;
-    /**
+        /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function  __construct(RoleRepository $roleRepository, RoleService $roleService){
-        $this->roleRepository=$roleRepository;
+    public function  __construct(RoleService $roleService)
+    {
         $this->roleService=$roleService;
     }
     public function index()
     {
-        $roles= $this->roleRepository->getRole();
+        $roles= $this->roleService->getRole();
         return $roles ? $this->sendResponse($roles, 'Role Details!',200) 
         : $this->sendError('Role not found');
     }
@@ -44,9 +42,9 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRoleRequest $request)
+    public function store(StoreRoleRequest $role)
     {
-        $role = $this->roleRepository->createRole($request);
+        $role = $this->roleService->createRole($role);
         return $role ? $this->sendResponse($role, 'Role created Successfully!',201) 
         : $this->sendError('Role creation error');
     }
@@ -59,7 +57,7 @@ class RoleController extends Controller
      */
     public function show($roleId)
     {
-        $rolePermissions=$this->roleRepository->showRole($roleId);
+        $rolePermissions=$this->roleService->showRole($roleId);
         return $rolePermissions ? $this->sendResponse($rolePermissions, 'Role Detail retrieved Successfully!', 200) 
             : $this->sendError('Role not found.');
     }
@@ -97,7 +95,7 @@ class RoleController extends Controller
      */
     public function destroy($roleId)
     {
-        $role = $this->roleRepository->deleteRole($roleId);
+        $role = $this->roleService->deleteRole($roleId);
         return $role ? $this->sendResponse($role, 'Role Delete Successfully!!', 200)
         : $this->sendError('Role not found.');
     }

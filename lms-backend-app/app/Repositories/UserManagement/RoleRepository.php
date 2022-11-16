@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\UserManagement;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-
 class RoleRepository{
-    public function getRole(){
-      return Role::all();
-    }
-
-    public function createRole(Request $request){
+    public function saveRole(Request $request){
         $role=Role::create($request->all());
         return $role->syncPermissions($request->input('permission'));
     }
+
+    public function getRole(){
+        return $role=Role::all();
+    }
+
 
     public function showRole($roleId){
         $role = Role::find($roleId);

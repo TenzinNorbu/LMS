@@ -1,36 +1,35 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\UserManagement;
 use App\Models\User;
 use DB;
 use Carbon\Carbon;
 use ESolution\DBEncryption\Encrypter;
 
-
 class UserRepository{
-    public function getAllUsers(){
-        $data = DB::table('users')->select('employee_full_name', 'branch_id','user_id')->get();
-        // return $data;
-        $data->transform(function($user) {
-            $user->employee_full_name = Encrypter::decrypt($user->employee_full_name);
-            $user->branch_id = Encrypter::decrypt($user->branch_id);
-            // $user->phone = Encrypter::decrypt($user->phone);
-            // $user->user_name;
-            return  $user;
-        });
-        return $data;
-        // return User::all();
+    public function __construct(User $user){
+        $this->user = $user;
     }
 
-    public function register($userDetails){
+    public function save($userDetails){
         $user = User::create($userDetails->all());
-
         DB::table('user_log_managements')->insert([
             'user_id' => $userDetails->user_id, 
             'register_date' => Carbon::now()
         ]);
         return $user;
     }
+
+    public function getAllUsers(){
+        $data = DB::table('users')->select('employee_full_name', 'branch_id','user_id')->get();
+        $data->transform(function($user) {
+            $user->employee_full_name = Encrypter::decrypt($user->employee_full_name);
+            $user->branch_id = Encrypter::decrypt($user->branch_id);
+                return  $user;
+            });
+        return $data;
+    }
+
 
     public function getUserById($userId){
         return User::find($userId);

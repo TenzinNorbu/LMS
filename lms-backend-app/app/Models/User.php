@@ -16,8 +16,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class User extends Authenticatable implements JWTSubject,Auditable
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, EncryptedAttribute,\OwenIt\Auditing\Auditable
-    ;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, EncryptedAttribute,
+    \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -65,13 +65,14 @@ class User extends Authenticatable implements JWTSubject,Auditable
      *
      * @return array
      */
-    public function getJWTCustomClaims() {
+    public function getJWTCustomClaims(){
         return [];
-    }  
-    public function setPasswordAttribute($password)
-    {   
+    } 
+
+    public function setPasswordAttribute($password){   
         $this->attributes['password'] = bcrypt($password);
     }
+
     protected $encryptable = [
       'employee_full_name','employment_id','branch_id','department_id',
         'designation','phone_no',

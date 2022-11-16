@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\UserManagementModule;
+namespace App\Http\Controllers\UserManagement;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\UserRepository;
-use App\Services\UserService;
+use App\Services\UserManagement\UserService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreUserRequest;
 
-
 class UserController extends Controller
 {
-    private $userRepository,$userService;
-
-    public function __construct(UserService $userService, UserRepository $userRepository) 
+    public function __construct(UserService $userService) 
     {
         $this->userService = $userService;
-        $this->userRepository=$userRepository;
     }
     /**
      * Display a listing of the resource.
@@ -25,7 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users=$this->userRepository->getAllUsers();
+        $users=$this->userService->getAll();
         return $users ? $this->sendResponse($users, 'User Detail retrieved Successfully!',200) 
         : $this->sendError('User not found');
     }
@@ -48,7 +43,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $userDetails)
     {
-        $user= $this->userRepository->register($userDetails);
+        $user= $this->userService->saveUserData($userDetails);
         return $user ? $this->sendResponse($user, 'User Submitted Successfully!',200) 
         : $this->sendError('User not found');
     }
@@ -61,7 +56,7 @@ class UserController extends Controller
      */
     public function show($userId)
     {
-        $user= $this->userRepository->getUserById($userId);
+        $user= $this->userService->getById($userId);
         return $user ? $this->sendResponse($user, 'User Retrived Successfully!',200) 
         : $this->sendError('User not found');
     }
@@ -99,7 +94,7 @@ class UserController extends Controller
      */
     public function destroy($userId)
     {
-        $user=$this->userRepository->deleteUser($userId);
+        $user=$this->userService->deleteUser($userId);
         return $user ? $this->sendResponse($user, 'User Deleted Successfully!!',200) 
         : $this->sendError('User not found');
 

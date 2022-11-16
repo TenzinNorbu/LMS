@@ -24,9 +24,17 @@ class StoreDepartmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'department_code' => ['required','string','max:20'],
+            'department_code' => ['required'],
             'branch_id' =>['required'],
-            'department_name' => ['required','string','max:100']
+            'department_name' => ['required']
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'department_code.required' => 'Department Code is required!',
+            'branch_code.required' => 'Branch Id required!',
+            'department_name.required' => 'Department Code is required!',
         ];
     }
 }

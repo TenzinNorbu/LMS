@@ -2,12 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserManagementModule\LoginLogoutController;
-use App\Http\Controllers\UserManagementModule\UserController;
-use App\Http\Controllers\UserManagementModule\RoleController;
+use App\Http\Controllers\UserManagement\LoginLogoutController;
+use App\Http\Controllers\UserManagement\UserController;
+use App\Http\Controllers\UserManagement\RoleController;
 use App\Http\Controllers\UserManagementModule\PermissionController;
 use App\Http\Controllers\UserManagementModule\ProfileController;
-use App\Http\Controllers\UserManagementModule\ChangeForgotPasswordController;
+use App\Http\Controllers\UserManagement\ChangeForgotPasswordController;
 use App\Http\Controllers\MasterData\BranchController;
 use App\Http\Controllers\MasterData\DepartmentController;
 use App\Http\Controllers\ApplicantModule\ApplicantInfoController;
@@ -43,22 +43,16 @@ Route::group([
     Route::post('/refresh-token', [LoginLogoutController::class, 'refreshToken']);
     Route::post('/logout', [LoginLogoutController::class, 'logout']);
     Route::post('/change-password/{id}', [ChangeForgotPasswordController::class, 'changePassword']);
+
 //role & permission
     Route::resource('role', RoleController::class);
-    Route::resource('permission', PermissionController::class);
-
-    // Route::post('/role-create', [RoleController::class, 'store']);
-    // Route::get('/role-lists', [RoleController::class, 'index']);
-    // Route::get('/role-show/{id}', [RoleController::class, 'show']);
-    // Route::post('/role-update/{id}', [RoleController::class, 'update']);
-    // Route::post('/role-delete/{id}', [RoleController::class, 'destroy']);  
-    
+    Route::resource('permission', PermissionController::class);    
 });
 
 Route::group([
     'middleware' => 'jwt.verify',
     'prefix' => 'master-data'
-], function ($router) {
+], function ($router){
     Route::resource('branch', BranchController::class);
     Route::resource('department', DepartmentController::class);
 });

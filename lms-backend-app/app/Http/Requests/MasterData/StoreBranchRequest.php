@@ -24,8 +24,15 @@ class StoreBranchRequest extends FormRequest
     public function rules()
     {
         return [
-            'branch_code' => ['required','string', 'max:20'],
-            'branch_name'  => ['required','string','max:100']
+            'branch_code' => ['required','string'],
+            'branch_name'  => ['required','string']
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'branch_code.required' => 'Branch Code is required!',
+            'branch_name.required' => 'Branch Name id required!',
         ];
     }
 }

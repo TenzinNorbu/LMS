@@ -27,4 +27,10 @@ class StorePermissionRequest extends FormRequest
             'name' => ['required']
         ];
     }
+    public function messages()
+    {
+        return [
+            'name.required' => 'Name is required!'
+        ];
+    }
 }

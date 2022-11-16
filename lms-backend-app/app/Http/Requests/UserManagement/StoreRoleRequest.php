@@ -28,4 +28,11 @@ class StoreRoleRequest extends FormRequest
             'permission' => ['required']
         ];
     }
+    public function messages()
+    {
+        return [
+            'name.required' => 'Name is required!',
+            'permission.required' => 'Permission id required!',
+        ];
+    }
 }

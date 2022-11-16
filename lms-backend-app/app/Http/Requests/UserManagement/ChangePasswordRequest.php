@@ -28,4 +28,11 @@ class ChangePasswordRequest extends FormRequest
             'new_password' => ['required','confirmed','min:6']
         ];
     }
+    public function messages()
+    {
+        return [
+            'old_password.required' => 'Old Password is required!',
+            'new_password.required' => 'New Password id required!',
+        ];
+    }
 }

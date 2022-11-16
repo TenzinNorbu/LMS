@@ -5,11 +5,14 @@ namespace App\Http\Controllers\MasterData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\MasterData\StoreDepartmentRequest;
-use App\Http\Traits\MasterData\DepartmentTrait;
+use App\Services\MAsterData\DepartmentService;
 
 class DepartmentController extends Controller
 {
-    use DepartmentTrait;
+    public function __construct(DepartmentService $departmentService) 
+    {
+        $this->departmentService = $departmentService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +20,9 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-       return $this->getDepartment();
+       $dept=$this->departmentService->getDepartment();
+       return $dept ? $this->sendResponse($dept, 'Department Details retrieved Successfully!') 
+       : $this->sendError('Department not found');
     }
 
     /**
@@ -36,9 +41,11 @@ class DepartmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreDepartmentRequest $request)
+    public function store(StoreDepartmentRequest $deptDetails)
     {
-         return $this->createDepartment($request);
+         $dept=$this->departmentService->createDepartment($deptDetails);
+         return $dept ? $this->sendResponse($dept, 'Department created Successfully!') 
+         : $this->sendError('Department creation error');
     }
 
     /**
@@ -47,9 +54,12 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($deptId)
     {
-        return $this->showDepartment($id);
+        $dept= $this->departmentService->showDepartment($deptId);
+        return $dept ? $this->sendResponse($dept, 'Department details retrieved Successfully!') 
+        : $this->sendError('Department not found');
+
     }
 
     /**
@@ -81,8 +91,10 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($deptId)
     {
-        return $this->deleteDepartment($id);
+        $dept=$this->departmentService->deleteDepartment($deptId);
+        return $dept ? $this->sendResponse($dept, 'Department Deleted Successfully!!') 
+        : $this->sendError('Department not found');
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Traits\UserManagement;
+namespace App\Repositories\UserManagement;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon; 
@@ -9,23 +9,19 @@ use Illuminate\Support\Str;
 use Auth;
 use DB;
 
-
-trait ChangeForgotPasswordTrait{
-
-    public function resetLinkEmail($request)
-    {
-        if($user=User::where('email','=',$request->email)->exists()){
+class ChangeForgotPasswordRepository{ 
+    public function passwordLink($request){
         $token = Str::random(64);
         DB::table('password_resets')->insert([
             'email' => $request->email, 
             'token' => $token,
             'created_at' => Carbon::now()
-          ]);
+        ]);
 
-           $details = [
-               'email'=> $request->email,
-               'url' => env('APP_URL').("/api/reset-password/$token")
-           ];
+        $details = [
+            'email'=> $request->email,
+            'url' => env('APP_URL').("/api/reset-password/$token")
+        ];
             Mail::send('forgetPassword',$details, function($message) use($request){
             $message->from('tnorbu2424@gmail.com','BIL LMS System');
             $message->to($request->email);
@@ -34,28 +30,10 @@ trait ChangeForgotPasswordTrait{
         return response()->json([
             'status' => 'success',
             'message' => 'We have e-mailed your password reset link. Please reset your password!']);
-      
-    }else{
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Your request email not found in the list.Please check your email Id!']);
-    }
-}
 
-    public function passwordReset($request, $token)
-    {
-        $updatePassword = DB::table('password_resets')
-                              ->where([
-                                'email' => $request->email, 
-                                'token' => $request->token
-                              ])->exists();
-        
-          if(!$updatePassword){
-            return response()->json([
-                'status'=> 'error',
-                'message' => 'Invalid Token Id!']);
-          }
-       
+        }
+
+    public function passwordReset($request){
         $user_id=User::select('user_id')
                      ->where('email', '=', $request->email)->get();
 
@@ -74,13 +52,7 @@ trait ChangeForgotPasswordTrait{
               'message' => 'Your password has been changed!']);
     }
 
-    public function updatePassword($request, $id)
-     {
-        // #Match The Old Password
-        if(!Hash::check($request->old_password, auth()->user()->password)){
-        return $this->sendError('Old password doesnot match.');
-        }
-        #Update the new Password
+    public function passwordChange($id){
         $user = User::find($id);
         $user->password = Hash::make($request->new_password);
 

@@ -1,34 +1,43 @@
 <?php
 
-namespace App\Http\Traits\UserManagement;
+namespace App\Services\UserManagement;
+
 use Illuminate\Http\Request;
+use App\Http\Requests\UserManagement\LoginRequest;
 use App\Models\User;
 use JWTAuth;
-use Carbon\Carbon; 
 use DB;
 use Session;
+use Carbon\Carbon;
 
-trait LoginLogoutTrait {
-
-    public function login($request) {
+class LoginLogoutService {
+    public function userLogin(LoginRequest $request) {
         $user=$request->only('user_id','password');
         
-        if (!$token=JWTAuth::attempt($user)) {
+        if(!$token=JWTAuth::attempt($user)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid Credentials or User not found'
                 ], 401);
            }
-       DB::table('user_log_managements')->insert([
+        DB::table('user_log_managements')->insert([
            'user_id' =>auth()->user()->user_id, 
            'login_date' => Carbon::now()
          ]);
        return $this->createToken($token);
     }
 
-
-    public function userLogout()
+    protected function createToken($token)
     {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'data' => auth()->user(),
+        ]);
+    }
+
+    public function userLogout(){
         $currentUser=auth()->user()->user_id;
         Session::flush();
         auth()->logout();
@@ -39,16 +48,6 @@ trait LoginLogoutTrait {
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
-        ]);
-    }
-
-    protected function createToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'payload' => auth()->user(),
         ]);
     }
 }

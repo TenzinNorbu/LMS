@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\UserManagementModule;
+namespace App\Http\Controllers\UserManagement;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\ForgotPasswordRequest;
 use App\Http\Requests\UserManagement\ResetPasswordRequest;
 use App\Http\Requests\UserManagement\ChangePasswordRequest;
-use App\Services\ChangeForgotPasswordService;
+use App\Services\UserManagement\ChangeForgotPasswordService;
 
 
 class ChangeForgotPasswordController extends Controller
