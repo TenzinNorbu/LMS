@@ -16,12 +16,12 @@ class BranchRepository{
 
     public function showBranch($branchId)
     {
-        return Branch::find($branchId);
+        return $branch=Branch::find($branchId);
     }
 
-    public function updateBranch($request, $id)
+    public function updateBranch(Request $branch, $branchId)
     {
-        $branch = Branch::find($id);
+        $branch = Branch::find($branchId);
         $branch->branch_code = $request->branch_code;
         $branch->branch_name = $request->branch_name;
         $branch->save();
@@ -31,6 +31,6 @@ class BranchRepository{
 
     public function deleteBranch($branchId)
     { 
-        return Branch::find($branchId)->delete();
+        return $branch=Branch::find($branchId)->delete();
     }
 }

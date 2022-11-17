@@ -25,7 +25,7 @@ class UserRepository{
         $data->transform(function($user) {
             $user->employee_full_name = Encrypter::decrypt($user->employee_full_name);
             $user->branch_id = Encrypter::decrypt($user->branch_id);
-                return  $user;
+        return  $user;
             });
         return $data;
     }
@@ -38,6 +38,8 @@ class UserRepository{
     public function updateUser($userId, $userDetails){
 
         $user = User::find($userId);
+        return $user;
+        
         $user->employment_id = $userDetails->employment_id;
         $user->branch_id = $userDetails->branch_id;
         $user->department_id = $userDetails->department_id;

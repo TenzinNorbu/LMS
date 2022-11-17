@@ -26,13 +26,16 @@ class BranchService{
         return $this->branchRepository->showBranch($branchId);
     }
 
-    public function updateBranch($request, $id){
-        $branch = Branch::find($id);
-        $branch->branch_code = $request->branch_code;
-        $branch->branch_name = $request->branch_name;
-        $branch->save();
-        return $branch ? $this->sendResponse($branch, 'Branch Updated Successfully!!', 200)
-         : $this->sendError('Branch not able to update.');
+    public function updateBranch(Request $branch, $branchId){
+         $validated=validator::make($branchId,[
+             'branch_code'=>"required",
+             'branch_name'=>"required"
+         ]);
+         if($validated->fails()){
+            return "Validation fails";
+        }else{
+            return $this->roleRepository->updateBranch($branch, $branchId);
+        }
     }
 
     public function deleteBranch($branchId){

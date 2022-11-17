@@ -6,6 +6,7 @@ use App\Repositories\UserManagement\UserRepository;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreUserRequest;
+use App\Http\Requests\UserManagement\UserUpdateRequest;
 use DB;
 
 class UserService{
@@ -27,17 +28,19 @@ class UserService{
     }
 
     public function userUpdate(Request $userDetails, $userId){
-        $validator = Validator::make($userDetails->all(), [
-            'employment_id' => 'required|string',
-            'branch_id' => 'required|string',
-            'department_id' => 'required|string',
-            'phone_no' => 'required|string',
-            'designation' => 'required|string',
-            'user_id' => 'required|string',
-            'email' => 'required|string',
-            'user_status' => 'required|string',
+        $validated = validator::make($userDetails,[
+            'employee_full_name' => 'required',
+            'employment_id' => 'required',
+            'branch_id' => 'required',
+            'department_id' => 'required',
+            'designation' => 'required',
+            'phone_no' => 'required',
+            'user_id' => 'required',
+            'user_status' => 'required'
         ]);
-        return $this->userRepository->updateUser($userId,$userDetails);
+        return $validated;
+        $validated = $userDetails->safe()->only(['employment_id', 'branch_id','department_id','phone_no','designation','user_id','email','user_status']);
+        return $validated ? $this->userRepository->updateUser($userId,$userDetails):$this->sendError('Validation Fail');
     }
 
     public function deleteUser($userId){

@@ -23,14 +23,14 @@ class RoleRepository{
             ->get();
     }
 
-    public function updateRole(Request $roleId){
+    public function updateRole($role, $roleId){
         $role = Role::find($roleId);
-        $role->name = $request->input('name');
+        $role->name = $role->input('name');
         $role->save();
-        return $role->syncPermissions($request->input('permission'));
+        return $role->syncPermissions($role->input('permission'));
     }
 
     public function deleteRole($roleId){
-        return Role::find($roleId)->delete();       
+        return $role=Role::find($roleId)->delete();       
     }
 }

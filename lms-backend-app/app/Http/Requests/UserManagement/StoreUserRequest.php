@@ -47,7 +47,7 @@ class StoreUserRequest extends FormRequest
             'phone_no.required' => 'phone no is required!',
             'email.required' => 'email is required!',
             'user_id.required' => 'user id is required!',
-            'password.required' => 'password is required!',
+            'password.required' => 'password is required!'
         ];
     }
 }

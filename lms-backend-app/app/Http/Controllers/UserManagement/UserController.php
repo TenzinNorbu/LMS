@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\UserManagement\UserService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreUserRequest;
+use App\Http\Requests\UserManagement\UserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -79,11 +80,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $userId, $userDetails)
+    public function update(Request $userDetails, $userId)
     {
-         $user= $this->userService->userUpdate($userId, $userDetails);
-         return $user ? $this->sendResponse($user, 'User Updated Successfully!!',200) 
-         : $this->sendError('User not found');
+        $user= $this->userService->userUpdate($userDetails,$userId);
+        return $user ? $this->sendResponse($user, 'User Updated Successfully!!',200) 
+         : $this->sendError('User updation fail');
     }
 
     /**
