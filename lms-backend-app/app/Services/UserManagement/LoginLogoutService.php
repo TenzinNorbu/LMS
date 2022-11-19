@@ -10,11 +10,11 @@ use DB;
 use Session;
 use Carbon\Carbon;
 
-class LoginLogoutService {
-    public function userLogin(LoginRequest $request) {
+class LoginLogoutService{
+    public function userLogin(LoginRequest $request){
         $user=$request->only('user_id','password');
         
-        if(!$token=JWTAuth::attempt($user)) {
+        if(!$token=JWTAuth::attempt($user)){
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid Credentials or User not found'
@@ -27,8 +27,7 @@ class LoginLogoutService {
        return $this->createToken($token);
     }
 
-    protected function createToken($token)
-    {
+    protected function createToken($token){
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',

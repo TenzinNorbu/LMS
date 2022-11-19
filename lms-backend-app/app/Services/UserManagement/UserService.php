@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreUserRequest;
 use App\Http\Requests\UserManagement\UserUpdateRequest;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\User;
 use DB;
 
 class UserService{
-    public function __construct(UserRepository $userRepository) {
+    public function __construct(UserRepository $userRepository){
         $this->userRepository = $userRepository;
     }
 
@@ -25,6 +29,16 @@ class UserService{
 
     public function getById($userId){
         return $this->userRepository->getUserById($userId);
+    }
+
+    public function getUserRole($userId){
+        $user_roles = User::join("model_has_roles", "model_has_roles.model_id", "=", "users.id")
+        ->join("roles", "roles.id", "=", "model_has_roles.role_id")
+        ->where("users.id", "=", $userId)
+        ->where('users.user_status', '=', 'inActive')
+        ->get(["roles.id as role_id", "roles.name as role_name"]);
+
+        return $user_roles;
     }
 
     public function userUpdate(Request $userDetails, $userId){

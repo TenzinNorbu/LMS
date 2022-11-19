@@ -34,12 +34,11 @@ Route::post('/forgot-password', [ChangeForgotPasswordController::class, 'resetEm
 Route::post('/reset-password/{token}', [ChangeForgotPasswordController::class, 'passwordResetLink']);
 
 
-Route::group([
-    'middleware' => 'jwt.verify',
-    'prefix' => 'auth'
-], function ($router) { 
+Route::group(['middleware' => 'jwt.verify','prefix' => 'auth'
+],function ($router) { 
 //user
     Route::resource('user', UserController::class);
+    Route::get('user-roles/{userId}', [UserController::class, 'edit']);
     Route::post('/refresh-token', [LoginLogoutController::class, 'refreshToken']);
     Route::post('/logout', [LoginLogoutController::class, 'logout']);
     Route::post('/change-password/{id}', [ChangeForgotPasswordController::class, 'changePassword']);
@@ -49,10 +48,8 @@ Route::group([
     Route::resource('permission', PermissionController::class);    
 });
 
-Route::group([
-    'middleware' => 'jwt.verify',
-    'prefix' => 'master-data'
-], function ($router){
+Route::group(['middleware' => 'jwt.verify','prefix' => 'master-data'
+],function ($router){
     Route::resource('branch', BranchController::class);
     Route::resource('department', DepartmentController::class);
 });

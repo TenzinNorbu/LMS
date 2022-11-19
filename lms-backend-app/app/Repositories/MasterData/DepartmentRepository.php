@@ -5,29 +5,31 @@ use Illuminate\Http\Request;
 use App\Models\Department;
 
 class DepartmentRepository{
-    public function saveDepartment($deptDetails){
-        return $dept = Department::create($deptDetails->all());
+    public function __construct(Department $department){
+        $this->department = $department;
     }
 
-    public function getDepartment() {
-        return $dept = Department::all();
+    public function saveDepartment($deptDetails){
+        return $this->department->create($deptDetails->all());
+    }
+
+    public function getDepartment(){
+        return $this->department->get();
     }
 
     public function showDepartment($deptId){
-        return $dept= Department::find($deptId);
+        return $this->department->find($deptId);
     }
 
-    public function updateDepartment($request, $id){
-        $dept = Department::find($id);
-        $dept->department_code = $request->department_code;
-        $dept->branch_id = $request->branch_id;
-        $dept->department_name = $request->department_name;
-        $dept->save();
-        return $dept ? $this->sendResponse($dept,'Department Updated Successfully!!', 200)
-         : $this->sendError('Department not able to update.');
+    public function updateDepartment($deptDetails, $deptId){
+        $dept =$this->department->find($deptId);
+        $dept->department_code = $deptDetails->department_code;
+        $dept->branch_id = $deptDetails->branch_id;
+        $dept->department_name = $deptDetails->department_name;
+        return $dept->save();
     }
 
     public function deleteDepartment($deptId){ 
-        return $dept = Department::find($deptId)->delete();
+        return $this->department->destroy($deptId);
     }
 }

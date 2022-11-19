@@ -26,16 +26,9 @@ class RoleService{
         return $this->roleRepository->showRole($roleId);
     }
 
-    public function updateRole(Request $role,$roleId){
-        $validated = validator::make($role,[
-            'name' => 'required',
-            'permission' => 'required'
-        ]);
-        if($validated->fails()){
-            return "Validation fails";
-        }else{
-            return $this->roleRepository->updateRole($role, $roleId);
-        }
+    public function updateRole(StoreRoleRequest $role,$roleId){
+        $validated = $role->validated();
+        return $validated ? $this->roleRepository->saveRole($role, $roleId):$this->sendError('Validation Fail');
     }
 
     public function deleteRole($roleId){

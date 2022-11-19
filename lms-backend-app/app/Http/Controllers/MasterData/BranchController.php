@@ -7,10 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\MasterData\StoreBranchRequest;
 use App\Services\MasterData\BranchService;
 
-class BranchController extends Controller
-{
-    public function __construct(BranchService $branchService) 
-    {
+class BranchController extends Controller{
+    public function __construct(BranchService $branchService){
         $this->branchService = $branchService;
     }
 
@@ -19,11 +17,9 @@ class BranchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-         $branch= $this->branchService->getBranch();
-         return $branch ? $this->sendResponse($branch, 'Branch Detail retrieved Successfully!') 
-         : $this->sendError('Branch not found'); 
+    public function index(){
+        $branch= $this->branchService->getBranch();
+        return $branch ? $this->sendResponse($branch, 'Branch Detail retrieved Successfully!') : $this->sendError('Branch not found'); 
     }
 
     /**
@@ -42,11 +38,9 @@ class BranchController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreBranchRequest $branch)
-    {
-         $branch= $this->branchService->saveBranch($branch);
-         return $branch ? $this->sendResponse($branch, 'Branch created Successfully!') 
-         : $this->sendError('Branch creation error');
+    public function store(StoreBranchRequest $branch){
+        $branch= $this->branchService->saveBranch($branch);
+        return $branch ? $this->sendResponse($branch, 'Branch created Successfully!') : $this->sendError('Branch creation error');
     }
 
     /**
@@ -55,11 +49,9 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($branchId)
-    {
+    public function show($branchId){
         $branch=$this->branchService->showBranch($branchId);
-        return $branch ? $this->sendResponse($branch, 'Branch Detail retrieved Successfully!') 
-        : $this->sendError('Branch not found');
+        return $branch ? $this->sendResponse($branch, 'Branch Detail retrieved Successfully!') : $this->sendError('Branch not found');
     }
 
     /**
@@ -80,9 +72,9 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreBranchRequest $request,$branchId)
-    {
-        return $this->branchService->updateBranch($request,$branchId);
+    public function update(StoreBranchRequest $branch,$branchId){
+        $brnach=$this->branchService->updateBranch($branch,$branchId);
+        return $branch ? $this->sendResponse($branch, 'Branch Updated Successfully!!', 200): $this->sendError('Branch not able to update.');
     }
 
     /**
@@ -91,11 +83,8 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($branchId)
-    {
+    public function destroy($branchId){
         $branch= $this->branchService->deleteBranch($branchId);
-        return $branch ? $this->sendResponse($branch, 'Branch Deleted Successfully!!') 
-        : $this->sendError('Branch not found');
-
+        return $branch ? $this->sendResponse($branch, 'Branch Deleted Successfully!!') : $this->sendError('Branch not found');
     }
 }

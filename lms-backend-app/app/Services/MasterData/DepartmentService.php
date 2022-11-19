@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\MasterData;
+
 use Illuminate\Http\Request;
 use App\Http\Requests\MasterData\StoreDepartmentRequest;
 use App\Repositories\MasterData\DepartmentRepository;
@@ -23,14 +24,9 @@ class DepartmentService{
         return $this->departmentRepository->showDepartment($deptId);
     }
 
-    public function updateDepartment($request, $id){
-        $dept = Department::find($id);
-        $dept->department_code = $request->department_code;
-        $dept->branch_id = $request->branch_id;
-        $dept->department_name = $request->department_name;
-        $dept->save();
-        return $dept ? $this->sendResponse($dept,'Department Updated Successfully!!', 200)
-         : $this->sendError('Department not able to update.');
+    public function updateDepartment(StoreDepartmentRequest $deptDetails,$deptId){
+        $validated = $deptDetails->validated();
+        return $validated ? $this->branchRepository->updateDepartment($deptDetails, $deptId):$this->sendError('Validation Fail');
     }
 
     public function deleteDepartment($deptDetails){ 

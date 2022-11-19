@@ -6,31 +6,30 @@ use App\Models\Branch;
 
 class BranchRepository{
 
+    public function __construct(Branch $branch){
+        $this->branch = $branch;
+    }
+
     public function saveBranch($branch){
-        return $branch = Branch::create($branch->all());
+        return $this->branch->create($branch->all());
     }
 
-    public function getBranch() {
-        return $branch = Branch::all();
+    public function getBranch(){
+        return $this->branch->get();
     }
 
-    public function showBranch($branchId)
-    {
-        return $branch=Branch::find($branchId);
+    public function showBranch($branchId){
+        return $this->branch->find($branchId);
     }
 
-    public function updateBranch(Request $branch, $branchId)
-    {
-        $branch = Branch::find($branchId);
+    public function updateBranch($branch,$branchId){
+        $branch =$this->branch->find($branchId);
         $branch->branch_code = $request->branch_code;
         $branch->branch_name = $request->branch_name;
-        $branch->save();
-        return $branch ? $this->sendResponse($branch, 'Branch Updated Successfully!!', 200)
-         : $this->sendError('Branch not able to update.');
+        return $branch->save();
     }
 
-    public function deleteBranch($branchId)
-    { 
-        return $branch=Branch::find($branchId)->delete();
+    public function deleteBranch($branchId){ 
+        return $this->branch->destroy($branchId)->delete();
     }
 }

@@ -38,7 +38,6 @@ class ChangeForgotPasswordService{
 
     public function updatePassword($request, $id){
         $password=Hash::check($request->old_password, auth()->user()->password);
-        return $password ? $this->changeForgotPasswordRepository->passwordChange($request, $id) 
-        :$this->sendError('Old password doesnot match.');
+        return $password ? $this->changeForgotPasswordRepository->passwordChange($request, $id) :$this->sendError('Old password doesnot match.');
     }
 }

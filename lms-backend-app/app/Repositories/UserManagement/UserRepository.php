@@ -12,7 +12,7 @@ class UserRepository{
     }
 
     public function save($userDetails){
-        $user = User::create($userDetails->all());
+        $user =$this->user->create($userDetails->all());
         DB::table('user_log_managements')->insert([
             'user_id' => $userDetails->user_id, 
             'register_date' => Carbon::now()
@@ -32,7 +32,7 @@ class UserRepository{
 
 
     public function getUserById($userId){
-        return User::find($userId);
+        return $this->user->find($userId);
     }
 
     public function updateUser($userId, $userDetails){
@@ -52,6 +52,6 @@ class UserRepository{
         return $user;
     }
     public function deleteUser($userId){
-        return User::destroy($userId);
+        return $this->user->destroy($userId);
     }
 }

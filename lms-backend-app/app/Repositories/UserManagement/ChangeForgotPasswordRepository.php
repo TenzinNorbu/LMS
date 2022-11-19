@@ -34,11 +34,9 @@ class ChangeForgotPasswordRepository{
         }
 
     public function passwordReset($request){
-        $user_id=User::select('user_id')
-                     ->where('email', '=', $request->email)->get();
+        $user_id=User::select('user_id')->where('email', '=', $request->email)->get();
 
-        DB::table('users')->where('email','=',$request->email)
-                         ->update(['password' => Hash::make($request->password)]);
+        DB::table('users')->where('email','=',$request->email)->update(['password' => Hash::make($request->password)]);
 
         DB::table('user_log_managements')->insert([
                  'user_id' => $user_id, 

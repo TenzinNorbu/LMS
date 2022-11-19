@@ -14,8 +14,7 @@ use ESolution\DBEncryption\Traits\EncryptedAttribute;
 use OwenIt\Auditing\Contracts\Auditable;
 
 
-class User extends Authenticatable implements JWTSubject,Auditable
-{
+class User extends Authenticatable implements JWTSubject,Auditable{
     use HasFactory, Notifiable, HasApiTokens, HasRoles, EncryptedAttribute,
     \OwenIt\Auditing\Auditable;
 
@@ -24,18 +23,7 @@ class User extends Authenticatable implements JWTSubject,Auditable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'employee_full_name',
-        'employment_id',
-        'branch_id',
-        'department_id',
-        'email',
-        'designation',
-        'phone_no',
-        'profile_url',        
-        'user_id',
-        'password',
-        'user_status'
+    protected $fillable = ['employee_full_name','employment_id','branch_id','department_id','email','designation','phone_no','profile_url','user_id','password','user_status'
     ];
 
     /**

@@ -10,26 +10,22 @@ use App\Http\Requests\UserManagement\ChangePasswordRequest;
 use App\Services\UserManagement\ChangeForgotPasswordService;
 
 
-class ChangeForgotPasswordController extends Controller
-{
+class ChangeForgotPasswordController extends Controller{
     private $changeForgotPasswordService;
 
     public function __construct(ChangeForgotPasswordService $changeForgotPasswordService){
         $this->changeForgotPasswordService= $changeForgotPasswordService;
     }
 
-    public function resetEmailLink(ForgotPasswordRequest $request)
-    {
+    public function resetEmailLink(ForgotPasswordRequest $request){
         return $this->changeForgotPasswordService->resetLink($request);
     }
 
-    public function passwordResetLink(ResetPasswordRequest $request, $token)
-    {
+    public function passwordResetLink(ResetPasswordRequest $request, $token){
         return $this->changeForgotPasswordService->reset($request, $token);
     }
 
-    public function changePassword(ChangePasswordRequest $request, $id)
-     {
+    public function changePassword(ChangePasswordRequest $request, $id){
          return $this->changeForgotPasswordService->updatePassword($request, $id);
      }
 }

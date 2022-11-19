@@ -7,11 +7,14 @@ use App\Services\UserManagement\UserService;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserManagement\StoreUserRequest;
 use App\Http\Requests\UserManagement\UserUpdateRequest;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\User;
 
-class UserController extends Controller
-{
-    public function __construct(UserService $userService) 
-    {
+
+class UserController extends Controller{
+    public function __construct(UserService $userService){
         $this->userService = $userService;
     }
     /**
@@ -19,11 +22,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $users=$this->userService->getAll();
-        return $users ? $this->sendResponse($users, 'User Detail retrieved Successfully!',200) 
-        : $this->sendError('User not found');
+        return $users ? $this->sendResponse($users, 'User Detail retrieved Successfully!',200) : $this->sendError('User not found');
     }
 
     /**
@@ -42,11 +43,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUserRequest $userDetails)
-    {
+    public function store(StoreUserRequest $userDetails){
         $user= $this->userService->saveUserData($userDetails);
-        return $user ? $this->sendResponse($user, 'User Submitted Successfully!',200) 
-        : $this->sendError('User not found');
+        return $user ? $this->sendResponse($user, 'User Submitted Successfully!',200) : $this->sendError('User not found');
     }
 
     /**
@@ -55,11 +54,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($userId)
-    {
+    public function show($userId){
         $user= $this->userService->getById($userId);
-        return $user ? $this->sendResponse($user, 'User Retrived Successfully!',200) 
-        : $this->sendError('User not found');
+        return $user ? $this->sendResponse($user, 'User Retrived Successfully!',200) : $this->sendError('User not found');
     }
 
     /**
@@ -68,9 +65,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($userId){
+        $user=User::find($userId);
+        $roles=Role::all();
+        $permissions=Permission::all();
+        $user_permissions = $user->getAllPermissions();
+
+        $user_roles=$this->userService->getUserRole($userId);
+        
+        return response()->json([
+            'status'=>'true',
+            'message'=> 'User-Role-Permission Details',
+            'user-data' => $user, 'user-role' => $user_roles,'user-permissions' => $user_permissions, 'roles' => $roles,'permission' => $permissions
+        ]);
     }
 
     /**
@@ -80,11 +87,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $userDetails, $userId)
-    {
+    public function update(Request $userDetails, $userId){
         $user= $this->userService->userUpdate($userDetails,$userId);
-        return $user ? $this->sendResponse($user, 'User Updated Successfully!!',200) 
-         : $this->sendError('User updation fail');
+        return $user ? $this->sendResponse($user, 'User Updated Successfully!!',200): $this->sendError('User updation fail');
     }
 
     /**
@@ -93,11 +98,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($userId)
-    {
+    public function destroy($userId){
         $user=$this->userService->deleteUser($userId);
-        return $user ? $this->sendResponse($user, 'User Deleted Successfully!!',200) 
-        : $this->sendError('User not found');
-
+        return $user ? $this->sendResponse($user, 'User Deleted Successfully!!',200) : $this->sendError('User not found');
     }
 }

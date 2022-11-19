@@ -8,9 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 
 
-class Branch extends Model implements Auditable
-{
+class Branch extends Model implements Auditable{
     use HasFactory,\OwenIt\Auditing\Auditable;
     protected $fillable = ['id','branch_code','branch_name'];
-
 }

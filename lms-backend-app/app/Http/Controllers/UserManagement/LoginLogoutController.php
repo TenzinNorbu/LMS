@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 use App\Services\UserManagement\LoginLogoutService;
 use App\Http\Requests\UserManagement\LoginRequest;
 
-class LoginLogoutController extends Controller
-{
-    public function __construct(LoginLogoutService $loginLogoutService) {
+class LoginLogoutController extends Controller{
+    public function __construct(LoginLogoutService $loginLogoutService){
         $this->loginLogoutService = $loginLogoutService;
     }
     
