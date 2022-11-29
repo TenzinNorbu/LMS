@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone_no');
             $table->string('profile_url')->default('../profile/logo.png');
-            $table->string('user_id');
+            $table->string('user_name');
             $table->string('password');
             $table->string('user_status')->default('inActive');
             $table->rememberToken();

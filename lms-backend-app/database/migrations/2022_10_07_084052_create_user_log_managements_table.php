@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('user_log_managements', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')
-            ->references('user_id')
+            $table->string('user_name')
+            ->references('user_name')
             ->on('users')->nullable();
             $table->string('register_date')->nullable();
             $table->string('password_change_date')->nullable();

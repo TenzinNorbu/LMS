@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject,Auditable{
      *
      * @var array<int, string>
      */
-    protected $fillable = ['employee_full_name','employment_id','branch_id','department_id','email','designation','phone_no','profile_url','user_id','password','user_status'
+    protected $fillable = ['employee_full_name','employment_id','branch_id','department_id','email','designation','phone_no','profile_url','user_name','password','user_status'
     ];
 
     /**
@@ -63,6 +63,6 @@ class User extends Authenticatable implements JWTSubject,Auditable{
 
     protected $encryptable = [
       'employee_full_name','employment_id','branch_id','department_id',
-        'designation','phone_no',
+        'designation','phone_no','user_name','email'
     ];
 }

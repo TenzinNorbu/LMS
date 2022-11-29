@@ -28,7 +28,7 @@ class CreateAdminUserSeeder extends Seeder
             'department_id'=>'3',
             'designation'=>'PMU',
             'email' => 'biladmin@gmail.com',
-            'user_id' => 'lms-admin',
+            'user_name' => 'lms-admin',
             'password' => 'lms@1234'
         ]);
       

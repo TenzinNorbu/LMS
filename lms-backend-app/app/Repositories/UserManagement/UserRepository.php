@@ -14,18 +14,18 @@ class UserRepository{
     public function save($userDetails){
         $user =$this->user->create($userDetails->all());
         DB::table('user_log_managements')->insert([
-            'user_id' => $userDetails->user_id, 
-            'register_date' => Carbon::now()
+            'user_name' => $userDetails->user_name, 
+            'register_date' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
         return $user;
     }
 
     public function getAllUsers(){
-        $data = DB::table('users')->select('employee_full_name', 'branch_id','user_id')->get();
+        $data = DB::table('users')->select('employee_full_name', 'branch_id','user_name')->get();
         $data->transform(function($user) {
             $user->employee_full_name = Encrypter::decrypt($user->employee_full_name);
             $user->branch_id = Encrypter::decrypt($user->branch_id);
-        return  $user;
+               return  $user;
             });
         return $data;
     }

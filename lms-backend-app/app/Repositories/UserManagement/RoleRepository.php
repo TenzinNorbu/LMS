@@ -23,8 +23,7 @@ class RoleRepository{
     public function showRole($roleId){
         $role =$this->role->find($roleId);
         return $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
-            ->where("role_has_permissions.role_id",$roleId)
-            ->get();
+            ->where("role_has_permissions.role_id",$roleId)->get();
     }
 
     public function updateRole($role, $roleId){

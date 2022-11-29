@@ -29,6 +29,7 @@ use App\Http\Controllers\ApplicantModule\LoanDetailController;
 // });
 
 Route::post('/login', [LoginLogoutController::class, 'authenticate']);
+Route::post('/logout', [LoginLogoutController::class, 'userLogout']);
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/forgot-password', [ChangeForgotPasswordController::class, 'resetEmailLink']);
 Route::post('/reset-password/{token}', [ChangeForgotPasswordController::class, 'passwordResetLink']);

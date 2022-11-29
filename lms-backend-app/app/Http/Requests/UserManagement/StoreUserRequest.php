@@ -31,7 +31,7 @@ class StoreUserRequest extends FormRequest
             'designation' => 'required|string',
             'phone_no' => 'required|min:8|max:8',
             'email' => 'required|email|max:50|unique:users',
-            'user_id' => 'required',
+            'user_name' => 'required',
             'password' => 'required|confirmed|min:6'
         ];
     }
@@ -46,7 +46,7 @@ class StoreUserRequest extends FormRequest
             'designation.required' => 'designation is required!',
             'phone_no.required' => 'phone no is required!',
             'email.required' => 'email is required!',
-            'user_id.required' => 'user id is required!',
+            'user_name.required' => 'user name is required!',
             'password.required' => 'password is required!'
         ];
     }
