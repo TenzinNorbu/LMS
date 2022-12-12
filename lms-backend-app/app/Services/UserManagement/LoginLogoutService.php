@@ -11,6 +11,7 @@ use App\Models\User;
 use JWTAuth;
 use Session;
 use Carbon\Carbon;
+use Mail;
 use ESolution\DBEncryption\Encrypter;
 
 

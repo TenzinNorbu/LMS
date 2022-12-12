@@ -51,6 +51,7 @@ class ChangeForgotPasswordRepository{
 
     public function passwordChange($id){
         $user = User::find($id);
+        return $user;
         $user->password = Hash::make($request->new_password);
 
         DB::table('user_log_managements')->insert([

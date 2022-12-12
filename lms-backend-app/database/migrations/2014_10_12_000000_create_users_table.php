@@ -31,6 +31,8 @@ return new class extends Migration
             $table->string('user_name');
             $table->string('password');
             $table->string('user_status')->default('inActive');
+            $table->string('password_created_date');
+            $table->string('password_reset_date');
             $table->rememberToken();
             $table->timestamps();
         });

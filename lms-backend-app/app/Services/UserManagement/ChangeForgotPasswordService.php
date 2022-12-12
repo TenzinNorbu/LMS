@@ -4,10 +4,12 @@ namespace App\Services\UserManagement;
 
 use App\Repositories\UserManagement\ChangeForgotPasswordRepository;
 use App\Http\Requests\UserManagement\ResetPasswordRequest;
+use App\Http\Requests\UserManagement\ChangePasswordRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use ESolution\DBEncryption\Encrypter;
 
 class ChangeForgotPasswordService{
@@ -33,7 +35,7 @@ class ChangeForgotPasswordService{
                 'message' => 'Invalid Token Id!']);
           }
 
-    public function updatePassword($request, $id){
+    public function updatePassword(ChangePasswordRequest $request, $id){
         $password=Hash::check($request->old_password, auth()->user()->password);
         return $password ? $this->changeForgotPasswordRepository->passwordChange($request, $id) :$this->sendError('Old password doesnot match.');
     }
