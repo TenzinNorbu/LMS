@@ -43,6 +43,7 @@ class ChangePasswordRequest extends FormRequest
         return [
             'old_password.required' => 'Old Password is required!',
             'password.required' => 'New Password is required!',
+            'password_confirmation.required' => 'Password confirmation is required'
         ];
     }
 }

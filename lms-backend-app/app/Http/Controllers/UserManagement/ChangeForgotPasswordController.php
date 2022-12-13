@@ -25,7 +25,7 @@ class ChangeForgotPasswordController extends Controller{
         return $this->changeForgotPasswordService->reset($request, $token);
     }
 
-    public function changePassword(ChangePasswordRequest $request, $id){
-         return $this->changeForgotPasswordService->updatePassword($request, $id);
+    public function changePassword(ChangePasswordRequest $request){
+         return $this->changeForgotPasswordService->updatePassword($request, $request->id);
      }
 }

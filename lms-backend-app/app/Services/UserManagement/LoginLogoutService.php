@@ -17,8 +17,7 @@ use ESolution\DBEncryption\Encrypter;
 
 class LoginLogoutService{
     public function userLogin(LoginRequest $request){
-        $user_name = User::where('user_name', 'LIKE', '%' . Encrypter::encrypt($request->user_name))->get()->first();
-
+        $user_name = User::where('user_name', 'LIKE', '%' . Encrypter::encrypt($request->user_name))->first();
         if(!$user_name){
            return response()->json(['success'=>false, 'message' => 'Login Fail, please check your user name']);}
             if(!Hash::check($request['password'], $user_name->password)){

@@ -36,7 +36,6 @@ class PasswordChangeNotificationCron extends Command
         foreach($users as $key => $user)
         {
             $email = $user->email;
-
             Mail::to($email)->send(new PasswordChangeNotificationMail($user));
         }
     }

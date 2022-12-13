@@ -35,8 +35,11 @@ class ChangeForgotPasswordService{
                 'message' => 'Invalid Token Id!']);
           }
 
-    public function updatePassword(ChangePasswordRequest $request, $id){
+    public function updatePassword(ChangePasswordRequest $request){
         $password=Hash::check($request->old_password, auth()->user()->password);
-        return $password ? $this->changeForgotPasswordRepository->passwordChange($request, $id) :$this->sendError('Old password doesnot match.');
+        return $password ? $this->changeForgotPasswordRepository->passwordChange($request,$request->id) 
+        :response()->json([
+            'status' => 'error',
+            'message' => 'Old password doesnot match!']);
     }
 }

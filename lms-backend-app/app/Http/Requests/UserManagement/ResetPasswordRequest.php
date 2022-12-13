@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\UserManagement;
 
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ResetPasswordRequest extends FormRequest
@@ -25,14 +26,23 @@ class ResetPasswordRequest extends FormRequest
     {
         return [
             'email' => 'required',
-            'password' => 'required|confirmed'
+            'password' => [
+                'required',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised()
+            ],
+            'password_confirmation' => 'required|same:password'
         ];
     }
     public function messages()
     {
         return [
             'email.required' => 'Email is required!',
-            'password.required' => 'Password id required!'
+            'password.required' => 'Password id required!',
         ];
     }
 }

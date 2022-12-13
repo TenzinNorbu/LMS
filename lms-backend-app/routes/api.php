@@ -42,7 +42,7 @@ Route::group(['middleware' => 'jwt.verify','prefix' => 'auth'
     Route::get('user-roles/{userId}', [UserController::class, 'edit']);
     Route::post('/refresh-token', [LoginLogoutController::class, 'refreshToken']);
     Route::post('/logout', [LoginLogoutController::class, 'logout']);
-    Route::post('/change-password/{id}', [ChangeForgotPasswordController::class, 'changePassword']);
+    Route::post('/change-password', [ChangeForgotPasswordController::class, 'changePassword']);
 
 //role & permission
     Route::resource('role', RoleController::class);

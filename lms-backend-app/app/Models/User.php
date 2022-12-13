@@ -33,7 +33,7 @@ class User extends Authenticatable implements JWTSubject,Auditable{
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        // 'password',
         'remember_token',
     ];
 

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+
 class PasswordChangeNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -20,9 +21,6 @@ class PasswordChangeNotificationMail extends Mailable
     public function __construct($details)
     {
        $this->details = $details;
-       $details=[
-           'url' => env('APP_URL').("/api/forgot-password")
-        ];
     }
 
     /**
