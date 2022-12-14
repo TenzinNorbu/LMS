@@ -30,6 +30,7 @@ class PasswordChangeNotificationMail extends Mailable
      */
     public function build()
     {
+       
         return $this->subject('Password Change Notification!')
                     ->view('passwordchangenotification');
     }

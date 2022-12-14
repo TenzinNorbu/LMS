@@ -4,9 +4,13 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\User;
 
 class Kernel extends ConsoleKernel
 {
+    protected $commands = [
+        Commands\PasswordChangeNotificationCron::class,
+    ];
     /**
      * Define the application's command schedule.
      *
@@ -16,6 +20,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // $password_reset_date=User::select('password_reset_date')->get();
+
+        // return $password_reset_date;
+ 
         $schedule->command('passwordchangenotification:cron')
                  ->everyMinute()
                  ->withoutOverlapping()

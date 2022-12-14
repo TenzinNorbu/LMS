@@ -36,9 +36,10 @@ class ChangeForgotPasswordRepository{
 
     public function passwordReset($request){
         $user_name = User::select('user_name','password')->where('email', 'LIKE', '%' . Encrypter::encrypt($request->email))->first();
-        if(!Hash::check($request->password,'$user_name->password')){
+        if(!Hash::check($request->password, $user_name->password)){
             DB::table('users')->where('email', 'LIKE', '%' . Encrypter::encrypt($request->email))->update([
                 'password' => Hash::make($request->password),
+                'password_status'=>"isChanged",
                 'password_created_date'=> Carbon::now()->format('Y-m-d'),
                 'password_reset_date'=> Carbon::now()->addDays(45)]);
 

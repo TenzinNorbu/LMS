@@ -24,6 +24,7 @@ class UserRepository{
         $user->password=$userDetails->password;
         $user->password_created_date = Carbon::now()->format('Y-m-d');
         $user->password_reset_date = Carbon::now()->addDays(45);
+        $user->encrypted=1;
         $user->save();
 
         DB::table('user_log_managements')->insert([

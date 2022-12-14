@@ -9,7 +9,7 @@
     You are receiving this email because the change password is required for the security purpose of 
     your account associated with <strong>{{$details['email'] }}</strong> for the<strong> BIL LMS System.</strong>
     <p>To change your password,click on <a class="btn btn-primary" href="{{url('/api/forgot-password')}}"><strong>Change Password.</strong></a>
-    Therefore, please change the system password.</p>
+    Therefore,you are request to change the password, if not you will not able to login.</p>
     <br>
 </p>
 <p>
